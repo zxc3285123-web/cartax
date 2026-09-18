@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zxc3285123-web.github.io/cartax/sitemap.xml
