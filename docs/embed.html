@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>자동차세 계산기 | 자동차세 신호등</title>
+<meta name="description" content="신차·중고차 취득세와 연간 자동차세를 차종만 고르면 바로 계산합니다. 공채 매입비, 전기차·경차 감면, 연납 할인까지 한 번에.">
+<link rel="canonical" href="https://zxc3285123-web.github.io/cartax/embed.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="자동차세 계산기 | 자동차세 신호등">
+<meta property="og:description" content="신차·중고차 취득세와 연간 자동차세를 차종만 고르면 바로 계산합니다. 공채 매입비, 전기차·경차 감면, 연납 할인까지 한 번에.">
+<meta property="og:url" content="https://zxc3285123-web.github.io/cartax/embed.html">
+<meta property="og:site_name" content="자동차세 신호등">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f9e8f'/><circle cx='16' cy='9' r='3.4' fill='%233aa76d'/><circle cx='16' cy='16' r='3.4' fill='%23e8a33d'/><circle cx='16' cy='23' r='3.4' fill='%23e05c5c'/></svg>">
+<style>
+:root{
+  --bg:#f3f8f7; --card:#ffffff; --ink:#1d2b2a; --muted:#5d7472;
+  --line:#dbe9e7; --brand:#2f9e8f; --brand-soft:#e4f4f1; --brand-deep:#1f7a6e;
+  --go:#3aa76d; --warn:#e8a33d; --stop:#e05c5c;
+  --radius:18px; --shadow:0 2px 14px rgba(31,122,110,.07);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif;
+  line-height:1.75;font-size:16px;word-break:keep-all}
+a{color:var(--brand-deep);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px}
+header.site{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header.site .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.logo{font-weight:800;font-size:18px;color:var(--ink);display:flex;align-items:center;gap:7px}
+.logo .dots{display:inline-flex;gap:3px}
+.logo .dots i{width:8px;height:8px;border-radius:50%;display:block}
+.logo .dots i:nth-child(1){background:var(--go)}
+.logo .dots i:nth-child(2){background:var(--warn)}
+.logo .dots i:nth-child(3){background:var(--stop)}
+nav.site{margin-left:auto;display:flex;gap:16px;font-size:14px}
+nav.site a{color:var(--muted);font-weight:600}
+main{padding:28px 0 56px}
+h1{font-size:27px;line-height:1.35;margin:0 0 10px;letter-spacing:-.4px}
+h2{font-size:20px;margin:34px 0 12px;letter-spacing:-.3px}
+h3{font-size:17px;margin:24px 0 8px}
+p{margin:0 0 14px}
+.lead{color:var(--muted);font-size:16px;margin-bottom:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.grid{display:grid;gap:12px}
+@media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
+.grid.specs{grid-template-columns:1fr 1fr;gap:10px 12px}
+.grid.specs label{font-size:12px}
+.grid.specs input,.grid.specs select{padding:10px;font-size:15px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;white-space:nowrap}
+th{background:var(--brand-soft);font-weight:700;color:var(--brand-deep)}
+td:first-child,th:first-child{white-space:normal}
+.src{font-size:13px;color:var(--muted);margin-top:-6px}
+.tip{background:var(--brand-soft);border-left:3px solid var(--brand);border-radius:0 10px 10px 0;
+  padding:12px 14px;margin:16px 0;font-size:15px}
+.cta{background:#fffaf0;border:1px solid #f2e2c4;border-radius:12px;padding:12px 14px;font-size:15px}
+.btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:12px;
+  padding:12px 20px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--brand-deep);text-decoration:none;color:#fff}
+.btn.ghost{background:var(--card);color:var(--brand-deep);border:1px solid var(--line)}
+footer.site{border-top:1px solid var(--line);background:var(--card);padding:26px 0;
+  font-size:13px;color:var(--muted)}
+footer.site a{color:var(--muted)}
+footer.site .links{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px}
+.badge{display:inline-block;background:var(--brand-soft);color:var(--brand-deep);
+  border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;margin-right:5px}
+ul,ol{padding-left:20px;margin:0 0 14px}
+li{margin-bottom:5px}
+.postlist{list-style:none;padding:0}
+.postlist li{margin-bottom:12px}
+.postlist a{font-weight:700;font-size:17px}
+.postlist p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.disclaimer{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);
+  padding-top:14px;margin-top:26px}
+
+/* 계산기 */
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tabs button{flex:1;padding:11px;border:1px solid var(--line);background:var(--card);
+  border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;color:var(--muted);font-family:inherit}
+.tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;
+  font-size:16px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.field{margin-bottom:14px}
+.results{position:relative}
+.ac{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid var(--line);
+  border-radius:12px;box-shadow:var(--shadow);max-height:300px;overflow-y:auto;z-index:10;display:none}
+.ac div{padding:10px 12px;cursor:pointer;font-size:15px;border-bottom:1px solid var(--line)}
+.ac div:last-child{border-bottom:0}
+.ac div:hover,.ac div.sel{background:var(--brand-soft)}
+.ac small{color:var(--muted);margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;
+  font-size:13px;cursor:pointer;font-family:inherit;color:var(--muted)}
+.chips button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.out{background:var(--brand-soft);border-radius:14px;padding:16px;margin-top:6px}
+.out .row{display:flex;justify-content:space-between;padding:6px 0;font-size:15px;
+  border-bottom:1px dashed rgba(47,158,143,.25)}
+.out .row:last-child{border-bottom:0}
+.out .row.total{font-size:19px;font-weight:800;color:var(--brand-deep);
+  border-top:2px solid var(--brand);border-bottom:0;margin-top:8px;padding-top:12px}
+.out .row .neg{color:var(--go)}
+.out h3{margin:0 0 8px;font-size:15px;color:var(--brand-deep)}
+.mini{font-size:13px;color:var(--muted);margin-top:8px}
+#allitems table{font-size:14px}
+#allitems th,#allitems td{padding:7px 8px}
+</style>
+
+<style>
+body{background:transparent;padding:0}
+.wrap{max-width:100%;padding:0 4px}
+main{padding:0}
+.card{margin-bottom:12px;padding:16px}
+.embed-foot{font-size:12px;color:var(--muted);text-align:center;padding:10px 4px 16px}
+.embed-foot a{font-weight:700}
+</style><meta name="robots" content="noindex,follow">
+</head>
+<body>
+
+<main><div class="wrap">
+
+
+<div class="card">
+  <div class="tabs">
+    <button class="on" data-mode="new">신차</button>
+    <button data-mode="used">중고차</button>
+  </div>
+
+  <div class="field results">
+    <label for="q">차종 검색 <span style="font-weight:400">— 초성도 됩니다 (ㄱㄹㅈ → 그랜저)</span></label>
+    <input id="q" type="text" placeholder="아반떼, ㅅㄹㅌ, model3, EV6 …" autocomplete="off">
+    <div class="ac" id="ac"></div>
+  </div>
+
+  <div class="field" style="display:none">
+    <label for="trim">트림</label>
+    <select id="trim"></select>
+  </div>
+
+  <div class="grid specs">
+    <div class="field"><label for="cc">배기량 (cc) — 전기차는 0</label>
+      <input id="cc" type="number" value="1598" min="0" step="1"></div>
+    <div class="field"><label for="price">차량가격 (만원, 부가세 포함)</label>
+      <input id="price" type="number" value="2100" min="0" step="10"></div>
+    <div class="field"><label for="fuel">연료</label>
+      <select id="fuel">
+        <option>가솔린</option><option>디젤</option><option>LPG</option>
+        <option>하이브리드</option><option>전기</option><option>수소</option>
+      </select></div>
+    <div class="field"><label for="regYear">최초등록 연도</label>
+      <select id="regYear"><option value="2026">2026년</option><option value="2025">2025년</option><option value="2024">2024년</option><option value="2023">2023년</option><option value="2022">2022년</option><option value="2021">2021년</option><option value="2020">2020년</option><option value="2019">2019년</option><option value="2018">2018년</option><option value="2017">2017년</option><option value="2016">2016년</option><option value="2015">2015년</option><option value="2014">2014년</option><option value="2013">2013년</option><option value="2012">2012년</option><option value="2011">2011년</option><option value="2010">2010년</option><option value="2009">2009년</option><option value="2008">2008년</option><option value="2007">2007년</option><option value="2006">2006년</option><option value="2005">2005년</option><option value="2004">2004년</option><option value="2003">2003년</option><option value="2002">2002년</option></select></div>
+    <div class="field"><label for="regMonth">최초등록 월</label>
+      <select id="regMonth"><option value="1">1월</option><option value="2">2월</option><option value="3">3월</option><option value="4">4월</option><option value="5">5월</option><option value="6">6월</option><option value="7">7월</option><option value="8">8월</option><option value="9">9월</option><option value="10">10월</option><option value="11">11월</option><option value="12">12월</option></select></div>
+    <div class="field"><label for="region">등록 지역 (공채)</label>
+      <select id="region"><option value="서울">서울</option><option value="부산">부산</option><option value="대구">대구</option><option value="인천">인천</option><option value="광주">광주</option><option value="대전">대전</option><option value="울산">울산</option><option value="세종">세종</option><option value="경기">경기</option><option value="강원">강원</option><option value="충북">충북</option><option value="충남">충남</option><option value="전북">전북</option><option value="전남">전남</option><option value="경북">경북</option><option value="경남">경남</option><option value="제주">제주</option></select></div>
+    <div class="field"><label for="use">용도</label>
+      <select id="use"><option>비영업용</option><option>영업용</option></select></div>
+  </div>
+
+  <div id="usedbox" style="display:none">
+    <div class="field"><label for="deal">실제 거래가 (만원)</label>
+      <input id="deal" type="number" value="0" min="0" step="10"
+        placeholder="0을 넣으면 시가표준액으로 계산합니다">
+      <div class="mini">중고차는 실거래가와 시가표준액 중 <strong>높은 쪽</strong>이 과세표준입니다.</div>
+    </div>
+  </div>
+
+  <div class="mini" style="margin:-4px 0 14px">
+    차령은 자동차등록증의 <b>최초등록일</b> 기준입니다. 제작연도(연식)와 다를 수 있습니다.
+  </div>
+
+  <div class="field" style="margin-bottom:6px">
+    <label>추가 감면 (하나만 적용됩니다)</label>
+    <div class="chips" id="extras">
+      <button data-v="다자녀">18세 미만 자녀 3명 이상</button>
+      <button data-v="장애인">장애인 · 국가유공자</button>
+    </div>
+  </div>
+</div>
+
+<div id="result"></div>
+
+<div class="embed-foot">
+  계산 결과는 참고용입니다 ·
+  <a href="https://zxc3285123-web.github.io/cartax/tool.html" target="_blank" rel="noopener">자동차세 신호등에서 자세히 보기 →</a>
+</div>
+
+</div></main>
+
+<script>window.__DATA__={"models": [{"mk": "현대", "nm": "캐스퍼", "al": ["캐스퍼", "casper"], "kd": "경차", "og": "국산", "sl": "현대-캐스퍼", "tr": [{"n": "1.0 가솔린", "cc": 998, "p": 14000000, "f": "가솔린"}, {"n": "1.0 터보", "cc": 998, "p": 17000000, "f": "가솔린"}]}, {"mk": "현대", "nm": "캐스퍼 일렉트릭", "al": ["캐스퍼EV", "캐스퍼일렉트릭"], "kd": "경차", "og": "국산", "sl": "현대-캐스퍼-일렉트릭", "tr": [{"n": "49kWh", "cc": 0, "p": 28000000, "f": "전기"}]}, {"mk": "현대", "nm": "베뉴", "al": ["베뉴", "venue"], "kd": "승용", "og": "국산", "sl": "현대-베뉴", "tr": [{"n": "1.6 가솔린", "cc": 1591, "p": 19000000, "f": "가솔린"}]}, {"mk": "현대", "nm": "아반떼", "al": ["아반떼", "엘란트라", "avante", "아반테"], "kd": "승용", "og": "국산", "sl": "현대-아반떼", "tr": [{"n": "1.6 가솔린", "cc": 1598, "p": 21000000, "f": "가솔린"}, {"n": "1.6 LPI", "cc": 1591, "p": 22000000, "f": "LPG"}, {"n": "1.6 하이브리드", "cc": 1580, "p": 29000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "아반떼 N", "al": ["아반떼N", "아반떼엔"], "kd": "승용", "og": "국산", "sl": "현대-아반떼-n", "tr": [{"n": "2.0 터보", "cc": 1998, "p": 33000000, "f": "가솔린"}]}, {"mk": "현대", "nm": "쏘나타", "al": ["쏘나타", "소나타", "sonata"], "kd": "승용", "og": "국산", "sl": "현대-쏘나타", "tr": [{"n": "2.0 가솔린", "cc": 1999, "p": 28000000, "f": "가솔린"}, {"n": "1.6 터보", "cc": 1598, "p": 30000000, "f": "가솔린"}, {"n": "2.0 하이브리드", "cc": 1999, "p": 33000000, "f": "하이브리드"}, {"n": "2.0 LPI", "cc": 1999, "p": 29000000, "f": "LPG"}]}, {"mk": "현대", "nm": "그랜저", "al": ["그랜저", "그렌저", "grandeur", "azera"], "kd": "승용", "og": "국산", "sl": "현대-그랜저", "tr": [{"n": "2.5 가솔린", "cc": 2497, "p": 38000000, "f": "가솔린"}, {"n": "3.5 가솔린", "cc": 3470, "p": 43000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 43000000, "f": "하이브리드"}, {"n": "3.5 LPI", "cc": 3470, "p": 39000000, "f": "LPG"}]}, {"mk": "현대", "nm": "코나", "al": ["코나", "kona"], "kd": "승용", "og": "국산", "sl": "현대-코나", "tr": [{"n": "1.6 터보", "cc": 1598, "p": 26000000, "f": "가솔린"}, {"n": "2.0 가솔린", "cc": 1999, "p": 24000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1580, "p": 31000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "코나 일렉트릭", "al": ["코나EV", "코나일렉트릭"], "kd": "승용", "og": "국산", "sl": "현대-코나-일렉트릭", "tr": [{"n": "64.8kWh", "cc": 0, "p": 47000000, "f": "전기"}]}, {"mk": "현대", "nm": "투싼", "al": ["투싼", "tucson"], "kd": "승용", "og": "국산", "sl": "현대-투싼", "tr": [{"n": "1.6 터보", "cc": 1598, "p": 29000000, "f": "가솔린"}, {"n": "2.0 디젤", "cc": 1998, "p": 31000000, "f": "디젤"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 35000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "싼타페", "al": ["싼타페", "santafe", "산타페"], "kd": "승용", "og": "국산", "sl": "현대-싼타페", "tr": [{"n": "2.5 터보", "cc": 2497, "p": 37000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 41000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "팰리세이드", "al": ["팰리세이드", "펠리세이드", "palisade"], "kd": "승용", "og": "국산", "sl": "현대-팰리세이드", "tr": [{"n": "2.5 터보", "cc": 2497, "p": 44000000, "f": "가솔린"}, {"n": "3.8 가솔린", "cc": 3778, "p": 46000000, "f": "가솔린"}, {"n": "2.5 하이브리드", "cc": 2497, "p": 50000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "아이오닉 5", "al": ["아이오닉5", "ioniq5", "아이오닉파이브"], "kd": "승용", "og": "국산", "sl": "현대-아이오닉-5", "tr": [{"n": "84kWh 롱레인지", "cc": 0, "p": 53000000, "f": "전기"}, {"n": "63kWh 스탠다드", "cc": 0, "p": 47000000, "f": "전기"}]}, {"mk": "현대", "nm": "아이오닉 6", "al": ["아이오닉6", "ioniq6"], "kd": "승용", "og": "국산", "sl": "현대-아이오닉-6", "tr": [{"n": "77.4kWh 롱레인지", "cc": 0, "p": 53000000, "f": "전기"}]}, {"mk": "현대", "nm": "아이오닉 9", "al": ["아이오닉9", "ioniq9"], "kd": "승용", "og": "국산", "sl": "현대-아이오닉-9", "tr": [{"n": "110kWh", "cc": 0, "p": 67000000, "f": "전기"}]}, {"mk": "현대", "nm": "넥쏘", "al": ["넥쏘", "nexo", "수소차"], "kd": "승용", "og": "국산", "sl": "현대-넥쏘", "tr": [{"n": "수소전기", "cc": 0, "p": 70000000, "f": "수소"}]}, {"mk": "현대", "nm": "스타리아", "al": ["스타리아", "staria"], "kd": "승합", "og": "국산", "sl": "현대-스타리아", "tr": [{"n": "2.2 디젤 11인승", "cc": 2199, "p": 34000000, "f": "디젤"}, {"n": "3.5 LPG 11인승", "cc": 3470, "p": 33000000, "f": "LPG"}, {"n": "1.6 하이브리드 9인승", "cc": 1598, "p": 39000000, "f": "하이브리드"}]}, {"mk": "현대", "nm": "포터 2", "al": ["포터", "포터2", "porter"], "kd": "화물", "og": "국산", "sl": "현대-포터-2", "tr": [{"n": "2.5 디젤 1톤", "cc": 2497, "p": 21000000, "f": "디젤"}, {"n": "2.5 LPG 1톤", "cc": 2497, "p": 20000000, "f": "LPG"}]}, {"mk": "현대", "nm": "포터 2 일렉트릭", "al": ["포터EV", "포터일렉트릭"], "kd": "화물", "og": "국산", "sl": "현대-포터-2-일렉트릭", "tr": [{"n": "58.8kWh 1톤", "cc": 0, "p": 43000000, "f": "전기"}]}, {"mk": "기아", "nm": "모닝", "al": ["모닝", "morning", "피칸토"], "kd": "경차", "og": "국산", "sl": "기아-모닝", "tr": [{"n": "1.0 가솔린", "cc": 998, "p": 15000000, "f": "가솔린"}, {"n": "1.0 LPI", "cc": 998, "p": 16000000, "f": "LPG"}]}, {"mk": "기아", "nm": "레이", "al": ["레이", "ray"], "kd": "경차", "og": "국산", "sl": "기아-레이", "tr": [{"n": "1.0 가솔린", "cc": 998, "p": 16000000, "f": "가솔린"}, {"n": "1.0 터보", "cc": 998, "p": 18000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "레이 EV", "al": ["레이EV", "레이전기차"], "kd": "경차", "og": "국산", "sl": "기아-레이-ev", "tr": [{"n": "35.2kWh", "cc": 0, "p": 28000000, "f": "전기"}]}, {"mk": "기아", "nm": "K3", "al": ["K3", "케이쓰리", "케이3"], "kd": "승용", "og": "국산", "sl": "기아-k3", "tr": [{"n": "1.6 가솔린", "cc": 1598, "p": 19000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "K4", "al": ["K4", "케이포", "케이4"], "kd": "승용", "og": "국산", "sl": "기아-k4", "tr": [{"n": "1.6 터보", "cc": 1598, "p": 24000000, "f": "가솔린"}, {"n": "2.0 가솔린", "cc": 1999, "p": 22000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "K5", "al": ["K5", "케이파이브", "케이5", "옵티마"], "kd": "승용", "og": "국산", "sl": "기아-k5", "tr": [{"n": "2.0 가솔린", "cc": 1999, "p": 28000000, "f": "가솔린"}, {"n": "1.6 터보", "cc": 1598, "p": 30000000, "f": "가솔린"}, {"n": "2.0 하이브리드", "cc": 1999, "p": 33000000, "f": "하이브리드"}, {"n": "2.0 LPI", "cc": 1999, "p": 29000000, "f": "LPG"}]}, {"mk": "기아", "nm": "K8", "al": ["K8", "케이에이트", "케이8"], "kd": "승용", "og": "국산", "sl": "기아-k8", "tr": [{"n": "2.5 가솔린", "cc": 2497, "p": 37000000, "f": "가솔린"}, {"n": "3.5 가솔린", "cc": 3470, "p": 42000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 42000000, "f": "하이브리드"}]}, {"mk": "기아", "nm": "K9", "al": ["K9", "케이나인", "케이9"], "kd": "승용", "og": "국산", "sl": "기아-k9", "tr": [{"n": "3.8 가솔린", "cc": 3778, "p": 57000000, "f": "가솔린"}, {"n": "5.0 가솔린", "cc": 5038, "p": 80000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "스토닉", "al": ["스토닉", "stonic"], "kd": "승용", "og": "국산", "sl": "기아-스토닉", "tr": [{"n": "1.4 가솔린", "cc": 1368, "p": 18000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "셀토스", "al": ["셀토스", "seltos"], "kd": "승용", "og": "국산", "sl": "기아-셀토스", "tr": [{"n": "1.6 터보", "cc": 1598, "p": 25000000, "f": "가솔린"}, {"n": "2.0 가솔린", "cc": 1999, "p": 23000000, "f": "가솔린"}]}, {"mk": "기아", "nm": "니로", "al": ["니로", "niro"], "kd": "승용", "og": "국산", "sl": "기아-니로", "tr": [{"n": "1.6 하이브리드", "cc": 1580, "p": 29000000, "f": "하이브리드"}]}, {"mk": "기아", "nm": "니로 EV", "al": ["니로EV", "니로전기차"], "kd": "승용", "og": "국산", "sl": "기아-니로-ev", "tr": [{"n": "64.8kWh", "cc": 0, "p": 48000000, "f": "전기"}]}, {"mk": "기아", "nm": "스포티지", "al": ["스포티지", "sportage"], "kd": "승용", "og": "국산", "sl": "기아-스포티지", "tr": [{"n": "1.6 터보", "cc": 1598, "p": 28000000, "f": "가솔린"}, {"n": "2.0 디젤", "cc": 1998, "p": 30000000, "f": "디젤"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 34000000, "f": "하이브리드"}]}, {"mk": "기아", "nm": "쏘렌토", "al": ["쏘렌토", "소렌토", "sorento"], "kd": "승용", "og": "국산", "sl": "기아-쏘렌토", "tr": [{"n": "2.2 디젤", "cc": 2151, "p": 36000000, "f": "디젤"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 40000000, "f": "하이브리드"}]}, {"mk": "기아", "nm": "모하비", "al": ["모하비", "mohave"], "kd": "승용", "og": "국산", "sl": "기아-모하비", "tr": [{"n": "3.0 디젤", "cc": 2959, "p": 53000000, "f": "디젤"}]}, {"mk": "기아", "nm": "카니발", "al": ["카니발", "carnival", "가니발"], "kd": "승용", "og": "국산", "sl": "기아-카니발", "tr": [{"n": "3.5 가솔린 9인승", "cc": 3470, "p": 39000000, "f": "가솔린"}, {"n": "2.2 디젤 9인승", "cc": 2151, "p": 38000000, "f": "디젤"}, {"n": "1.6 하이브리드 9인승", "cc": 1598, "p": 43000000, "f": "하이브리드"}]}, {"mk": "기아", "nm": "카니발 11인승", "al": ["카니발11인승", "카니발리무진", "11인승카니발"], "kd": "승합", "og": "국산", "sl": "기아-카니발-11인승", "tr": [{"n": "3.5 가솔린 11인승", "cc": 3470, "p": 40000000, "f": "가솔린"}, {"n": "2.2 디젤 11인승", "cc": 2151, "p": 39000000, "f": "디젤"}]}, {"mk": "기아", "nm": "EV3", "al": ["EV3", "이브이3"], "kd": "승용", "og": "국산", "sl": "기아-ev3", "tr": [{"n": "81.4kWh", "cc": 0, "p": 44000000, "f": "전기"}]}, {"mk": "기아", "nm": "EV4", "al": ["EV4", "이브이4"], "kd": "승용", "og": "국산", "sl": "기아-ev4", "tr": [{"n": "81.4kWh", "cc": 0, "p": 48000000, "f": "전기"}]}, {"mk": "기아", "nm": "EV6", "al": ["EV6", "이브이6"], "kd": "승용", "og": "국산", "sl": "기아-ev6", "tr": [{"n": "84kWh 롱레인지", "cc": 0, "p": 54000000, "f": "전기"}]}, {"mk": "기아", "nm": "EV9", "al": ["EV9", "이브이9"], "kd": "승용", "og": "국산", "sl": "기아-ev9", "tr": [{"n": "99.8kWh", "cc": 0, "p": 77000000, "f": "전기"}]}, {"mk": "기아", "nm": "봉고 3", "al": ["봉고", "봉고3", "bongo"], "kd": "화물", "og": "국산", "sl": "기아-봉고-3", "tr": [{"n": "2.5 디젤 1톤", "cc": 2497, "p": 21000000, "f": "디젤"}, {"n": "2.5 LPG 1톤", "cc": 2497, "p": 20000000, "f": "LPG"}]}, {"mk": "기아", "nm": "봉고 3 EV", "al": ["봉고EV", "봉고전기차"], "kd": "화물", "og": "국산", "sl": "기아-봉고-3-ev", "tr": [{"n": "58.8kWh 1톤", "cc": 0, "p": 43000000, "f": "전기"}]}, {"mk": "제네시스", "nm": "G70", "al": ["G70", "지70"], "kd": "승용", "og": "국산", "sl": "제네시스-g70", "tr": [{"n": "2.0 터보", "cc": 1998, "p": 46000000, "f": "가솔린"}, {"n": "3.3 터보", "cc": 3342, "p": 57000000, "f": "가솔린"}]}, {"mk": "제네시스", "nm": "G80", "al": ["G80", "지80"], "kd": "승용", "og": "국산", "sl": "제네시스-g80", "tr": [{"n": "2.5 터보", "cc": 2497, "p": 60000000, "f": "가솔린"}, {"n": "3.5 터보", "cc": 3470, "p": 73000000, "f": "가솔린"}]}, {"mk": "제네시스", "nm": "G80 전동화", "al": ["G80EV", "전동화G80"], "kd": "승용", "og": "국산", "sl": "제네시스-g80-전동화", "tr": [{"n": "87.2kWh", "cc": 0, "p": 86000000, "f": "전기"}]}, {"mk": "제네시스", "nm": "G90", "al": ["G90", "지90", "EQ900"], "kd": "승용", "og": "국산", "sl": "제네시스-g90", "tr": [{"n": "3.5 터보", "cc": 3470, "p": 95000000, "f": "가솔린"}, {"n": "3.5 터보 롱휠베이스", "cc": 3470, "p": 170000000, "f": "가솔린"}]}, {"mk": "제네시스", "nm": "GV60", "al": ["GV60", "지브이60"], "kd": "승용", "og": "국산", "sl": "제네시스-gv60", "tr": [{"n": "77.4kWh", "cc": 0, "p": 60000000, "f": "전기"}]}, {"mk": "제네시스", "nm": "GV70", "al": ["GV70", "지브이70"], "kd": "승용", "og": "국산", "sl": "제네시스-gv70", "tr": [{"n": "2.5 터보", "cc": 2497, "p": 55000000, "f": "가솔린"}, {"n": "3.5 터보", "cc": 3470, "p": 66000000, "f": "가솔린"}]}, {"mk": "제네시스", "nm": "GV70 전동화", "al": ["GV70EV", "전동화GV70"], "kd": "승용", "og": "국산", "sl": "제네시스-gv70-전동화", "tr": [{"n": "77.4kWh", "cc": 0, "p": 77000000, "f": "전기"}]}, {"mk": "제네시스", "nm": "GV80", "al": ["GV80", "지브이80"], "kd": "승용", "og": "국산", "sl": "제네시스-gv80", "tr": [{"n": "2.5 터보", "cc": 2497, "p": 69000000, "f": "가솔린"}, {"n": "3.5 터보", "cc": 3470, "p": 81000000, "f": "가솔린"}]}, {"mk": "제네시스", "nm": "GV80 쿠페", "al": ["GV80쿠페"], "kd": "승용", "og": "국산", "sl": "제네시스-gv80-쿠페", "tr": [{"n": "3.5 터보", "cc": 3470, "p": 92000000, "f": "가솔린"}]}, {"mk": "KG모빌리티", "nm": "티볼리", "al": ["티볼리", "tivoli"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-티볼리", "tr": [{"n": "1.5 터보", "cc": 1497, "p": 21000000, "f": "가솔린"}]}, {"mk": "KG모빌리티", "nm": "코란도", "al": ["코란도", "korando"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-코란도", "tr": [{"n": "1.5 터보", "cc": 1497, "p": 25000000, "f": "가솔린"}]}, {"mk": "KG모빌리티", "nm": "토레스", "al": ["토레스", "torres"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-토레스", "tr": [{"n": "1.5 터보", "cc": 1497, "p": 29000000, "f": "가솔린"}]}, {"mk": "KG모빌리티", "nm": "토레스 EVX", "al": ["토레스EVX", "토레스전기차"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-토레스-evx", "tr": [{"n": "73.4kWh", "cc": 0, "p": 46000000, "f": "전기"}]}, {"mk": "KG모빌리티", "nm": "액티언", "al": ["액티언", "actyon"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-액티언", "tr": [{"n": "1.5 터보", "cc": 1497, "p": 30000000, "f": "가솔린"}]}, {"mk": "KG모빌리티", "nm": "렉스턴", "al": ["렉스턴", "rexton"], "kd": "승용", "og": "국산", "sl": "kg모빌리티-렉스턴", "tr": [{"n": "2.2 디젤", "cc": 2157, "p": 42000000, "f": "디젤"}]}, {"mk": "KG모빌리티", "nm": "렉스턴 스포츠", "al": ["렉스턴스포츠", "렉스턴칸"], "kd": "화물", "og": "국산", "sl": "kg모빌리티-렉스턴-스포츠", "tr": [{"n": "2.2 디젤", "cc": 2157, "p": 33000000, "f": "디젤"}]}, {"mk": "KG모빌리티", "nm": "무쏘 EV", "al": ["무쏘EV", "무쏘"], "kd": "화물", "og": "국산", "sl": "kg모빌리티-무쏘-ev", "tr": [{"n": "80.6kWh", "cc": 0, "p": 48000000, "f": "전기"}]}, {"mk": "르노코리아", "nm": "그랑 콜레오스", "al": ["그랑콜레오스", "콜레오스"], "kd": "승용", "og": "국산", "sl": "르노코리아-그랑-콜레오스", "tr": [{"n": "1.5 터보", "cc": 1497, "p": 32000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 38000000, "f": "하이브리드"}]}, {"mk": "르노코리아", "nm": "아르카나", "al": ["아르카나", "XM3", "arkana"], "kd": "승용", "og": "국산", "sl": "르노코리아-아르카나", "tr": [{"n": "1.3 터보", "cc": 1332, "p": 24000000, "f": "가솔린"}, {"n": "1.6 하이브리드", "cc": 1598, "p": 31000000, "f": "하이브리드"}]}, {"mk": "르노코리아", "nm": "QM6", "al": ["QM6", "큐엠6"], "kd": "승용", "og": "국산", "sl": "르노코리아-qm6", "tr": [{"n": "2.0 가솔린", "cc": 1998, "p": 28000000, "f": "가솔린"}, {"n": "2.0 LPG", "cc": 1998, "p": 29000000, "f": "LPG"}]}, {"mk": "르노코리아", "nm": "SM6", "al": ["SM6", "에스엠6"], "kd": "승용", "og": "국산", "sl": "르노코리아-sm6", "tr": [{"n": "1.3 터보", "cc": 1332, "p": 26000000, "f": "가솔린"}, {"n": "2.0 LPG", "cc": 1998, "p": 27000000, "f": "LPG"}]}, {"mk": "쉐보레", "nm": "스파크", "al": ["스파크", "spark"], "kd": "경차", "og": "국산", "sl": "쉐보레-스파크", "tr": [{"n": "1.0 가솔린", "cc": 999, "p": 13000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "트랙스 크로스오버", "al": ["트랙스", "trax"], "kd": "승용", "og": "국산", "sl": "쉐보레-트랙스-크로스오버", "tr": [{"n": "1.2 터보", "cc": 1199, "p": 22000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "트레일블레이저", "al": ["트레일블레이저", "trailblazer"], "kd": "승용", "og": "국산", "sl": "쉐보레-트레일블레이저", "tr": [{"n": "1.35 터보", "cc": 1341, "p": 26000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "이쿼녹스", "al": ["이쿼녹스", "equinox"], "kd": "승용", "og": "외산", "sl": "쉐보레-이쿼녹스", "tr": [{"n": "1.5 터보", "cc": 1498, "p": 32000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "말리부", "al": ["말리부", "malibu"], "kd": "승용", "og": "국산", "sl": "쉐보레-말리부", "tr": [{"n": "1.35 터보", "cc": 1341, "p": 27000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "콜로라도", "al": ["콜로라도", "colorado"], "kd": "화물", "og": "외산", "sl": "쉐보레-콜로라도", "tr": [{"n": "3.6 가솔린", "cc": 3564, "p": 45000000, "f": "가솔린"}]}, {"mk": "쉐보레", "nm": "타호", "al": ["타호", "tahoe"], "kd": "승용", "og": "외산", "sl": "쉐보레-타호", "tr": [{"n": "5.3 가솔린", "cc": 5327, "p": 95000000, "f": "가솔린"}]}, {"mk": "테슬라", "nm": "모델 3", "al": ["모델3", "model3", "테슬라모델3"], "kd": "승용", "og": "외산", "sl": "테슬라-모델-3", "tr": [{"n": "RWD", "cc": 0, "p": 52000000, "f": "전기"}, {"n": "롱레인지 AWD", "cc": 0, "p": 60000000, "f": "전기"}]}, {"mk": "테슬라", "nm": "모델 Y", "al": ["모델Y", "modely", "테슬라모델Y"], "kd": "승용", "og": "외산", "sl": "테슬라-모델-y", "tr": [{"n": "RWD", "cc": 0, "p": 55000000, "f": "전기"}, {"n": "롱레인지 AWD", "cc": 0, "p": 63000000, "f": "전기"}]}, {"mk": "테슬라", "nm": "모델 S", "al": ["모델S", "models"], "kd": "승용", "og": "외산", "sl": "테슬라-모델-s", "tr": [{"n": "롱레인지", "cc": 0, "p": 120000000, "f": "전기"}]}, {"mk": "테슬라", "nm": "모델 X", "al": ["모델X", "modelx"], "kd": "승용", "og": "외산", "sl": "테슬라-모델-x", "tr": [{"n": "롱레인지", "cc": 0, "p": 135000000, "f": "전기"}]}, {"mk": "BMW", "nm": "1시리즈", "al": ["1시리즈", "118i", "일시리즈"], "kd": "승용", "og": "외산", "sl": "bmw-1시리즈", "tr": [{"n": "118i", "cc": 1499, "p": 43000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "3시리즈", "al": ["3시리즈", "320i", "330i", "삼시리즈"], "kd": "승용", "og": "외산", "sl": "bmw-3시리즈", "tr": [{"n": "320i", "cc": 1998, "p": 58000000, "f": "가솔린"}, {"n": "330i", "cc": 1998, "p": 67000000, "f": "가솔린"}, {"n": "M340i", "cc": 2998, "p": 85000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "4시리즈", "al": ["4시리즈", "420i"], "kd": "승용", "og": "외산", "sl": "bmw-4시리즈", "tr": [{"n": "420i", "cc": 1998, "p": 65000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "5시리즈", "al": ["5시리즈", "520i", "530i", "오시리즈"], "kd": "승용", "og": "외산", "sl": "bmw-5시리즈", "tr": [{"n": "520i", "cc": 1998, "p": 70000000, "f": "가솔린"}, {"n": "530i", "cc": 1998, "p": 83000000, "f": "가솔린"}, {"n": "540i", "cc": 2998, "p": 100000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "7시리즈", "al": ["7시리즈", "740i", "칠시리즈"], "kd": "승용", "og": "외산", "sl": "bmw-7시리즈", "tr": [{"n": "740i", "cc": 2998, "p": 150000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "X1", "al": ["X1", "엑스원"], "kd": "승용", "og": "외산", "sl": "bmw-x1", "tr": [{"n": "sDrive20i", "cc": 1499, "p": 56000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "X3", "al": ["X3", "엑스쓰리"], "kd": "승용", "og": "외산", "sl": "bmw-x3", "tr": [{"n": "xDrive20i", "cc": 1998, "p": 73000000, "f": "가솔린"}, {"n": "xDrive30i", "cc": 1998, "p": 82000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "X5", "al": ["X5", "엑스파이브"], "kd": "승용", "og": "외산", "sl": "bmw-x5", "tr": [{"n": "xDrive40i", "cc": 2998, "p": 115000000, "f": "가솔린"}, {"n": "xDrive30d", "cc": 2993, "p": 118000000, "f": "디젤"}]}, {"mk": "BMW", "nm": "X7", "al": ["X7", "엑스세븐"], "kd": "승용", "og": "외산", "sl": "bmw-x7", "tr": [{"n": "xDrive40i", "cc": 2998, "p": 145000000, "f": "가솔린"}]}, {"mk": "BMW", "nm": "i4", "al": ["i4", "아이포"], "kd": "승용", "og": "외산", "sl": "bmw-i4", "tr": [{"n": "eDrive40", "cc": 0, "p": 75000000, "f": "전기"}]}, {"mk": "BMW", "nm": "i5", "al": ["i5", "아이파이브"], "kd": "승용", "og": "외산", "sl": "bmw-i5", "tr": [{"n": "eDrive40", "cc": 0, "p": 95000000, "f": "전기"}]}, {"mk": "BMW", "nm": "i7", "al": ["i7", "아이세븐"], "kd": "승용", "og": "외산", "sl": "bmw-i7", "tr": [{"n": "xDrive60", "cc": 0, "p": 170000000, "f": "전기"}]}, {"mk": "BMW", "nm": "iX", "al": ["iX", "아이엑스"], "kd": "승용", "og": "외산", "sl": "bmw-ix", "tr": [{"n": "xDrive50", "cc": 0, "p": 130000000, "f": "전기"}]}, {"mk": "BMW", "nm": "iX3", "al": ["iX3", "아이엑스쓰리"], "kd": "승용", "og": "외산", "sl": "bmw-ix3", "tr": [{"n": "전기", "cc": 0, "p": 80000000, "f": "전기"}]}, {"mk": "벤츠", "nm": "A클래스", "al": ["A클래스", "A200", "에이클래스"], "kd": "승용", "og": "외산", "sl": "벤츠-a클래스", "tr": [{"n": "A200", "cc": 1332, "p": 48000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "C클래스", "al": ["C클래스", "C200", "C300", "씨클래스"], "kd": "승용", "og": "외산", "sl": "벤츠-c클래스", "tr": [{"n": "C200", "cc": 1496, "p": 62000000, "f": "가솔린"}, {"n": "C300", "cc": 1999, "p": 73000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "E클래스", "al": ["E클래스", "E200", "E300", "이클래스"], "kd": "승용", "og": "외산", "sl": "벤츠-e클래스", "tr": [{"n": "E200", "cc": 1999, "p": 75000000, "f": "가솔린"}, {"n": "E300", "cc": 1999, "p": 88000000, "f": "가솔린"}, {"n": "E450", "cc": 2999, "p": 110000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "S클래스", "al": ["S클래스", "S500", "에스클래스"], "kd": "승용", "og": "외산", "sl": "벤츠-s클래스", "tr": [{"n": "S500", "cc": 2999, "p": 170000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "GLA", "al": ["GLA", "지엘에이"], "kd": "승용", "og": "외산", "sl": "벤츠-gla", "tr": [{"n": "GLA200", "cc": 1332, "p": 58000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "GLB", "al": ["GLB", "지엘비"], "kd": "승용", "og": "외산", "sl": "벤츠-glb", "tr": [{"n": "GLB200", "cc": 1332, "p": 64000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "GLC", "al": ["GLC", "지엘씨"], "kd": "승용", "og": "외산", "sl": "벤츠-glc", "tr": [{"n": "GLC300 4MATIC", "cc": 1999, "p": 85000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "GLE", "al": ["GLE", "지엘이"], "kd": "승용", "og": "외산", "sl": "벤츠-gle", "tr": [{"n": "GLE450 4MATIC", "cc": 2999, "p": 125000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "GLS", "al": ["GLS", "지엘에스"], "kd": "승용", "og": "외산", "sl": "벤츠-gls", "tr": [{"n": "GLS450 4MATIC", "cc": 2999, "p": 155000000, "f": "가솔린"}]}, {"mk": "벤츠", "nm": "EQA", "al": ["EQA", "이큐에이"], "kd": "승용", "og": "외산", "sl": "벤츠-eqa", "tr": [{"n": "EQA250", "cc": 0, "p": 63000000, "f": "전기"}]}, {"mk": "벤츠", "nm": "EQB", "al": ["EQB", "이큐비"], "kd": "승용", "og": "외산", "sl": "벤츠-eqb", "tr": [{"n": "EQB300", "cc": 0, "p": 73000000, "f": "전기"}]}, {"mk": "벤츠", "nm": "EQE", "al": ["EQE", "이큐이"], "kd": "승용", "og": "외산", "sl": "벤츠-eqe", "tr": [{"n": "EQE350+", "cc": 0, "p": 105000000, "f": "전기"}]}, {"mk": "벤츠", "nm": "EQS", "al": ["EQS", "이큐에스"], "kd": "승용", "og": "외산", "sl": "벤츠-eqs", "tr": [{"n": "EQS450+", "cc": 0, "p": 155000000, "f": "전기"}]}, {"mk": "아우디", "nm": "A4", "al": ["A4", "에이포"], "kd": "승용", "og": "외산", "sl": "아우디-a4", "tr": [{"n": "40 TFSI", "cc": 1984, "p": 59000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "A5", "al": ["A5", "에이파이브"], "kd": "승용", "og": "외산", "sl": "아우디-a5", "tr": [{"n": "40 TFSI", "cc": 1984, "p": 67000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "A6", "al": ["A6", "에이식스"], "kd": "승용", "og": "외산", "sl": "아우디-a6", "tr": [{"n": "45 TFSI", "cc": 1984, "p": 74000000, "f": "가솔린"}, {"n": "55 TFSI", "cc": 2995, "p": 92000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "A7", "al": ["A7", "에이세븐"], "kd": "승용", "og": "외산", "sl": "아우디-a7", "tr": [{"n": "55 TFSI", "cc": 2995, "p": 105000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "A8", "al": ["A8", "에이에잇"], "kd": "승용", "og": "외산", "sl": "아우디-a8", "tr": [{"n": "55 TFSI", "cc": 2995, "p": 150000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "Q3", "al": ["Q3", "큐쓰리"], "kd": "승용", "og": "외산", "sl": "아우디-q3", "tr": [{"n": "35 TFSI", "cc": 1498, "p": 53000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "Q5", "al": ["Q5", "큐파이브"], "kd": "승용", "og": "외산", "sl": "아우디-q5", "tr": [{"n": "45 TFSI", "cc": 1984, "p": 73000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "Q7", "al": ["Q7", "큐세븐"], "kd": "승용", "og": "외산", "sl": "아우디-q7", "tr": [{"n": "45 TFSI", "cc": 1984, "p": 100000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "Q8", "al": ["Q8", "큐에잇"], "kd": "승용", "og": "외산", "sl": "아우디-q8", "tr": [{"n": "55 TFSI", "cc": 2995, "p": 125000000, "f": "가솔린"}]}, {"mk": "아우디", "nm": "Q4 e-tron", "al": ["Q4이트론", "큐포이트론"], "kd": "승용", "og": "외산", "sl": "아우디-q4-e-tron", "tr": [{"n": "82kWh", "cc": 0, "p": 65000000, "f": "전기"}]}, {"mk": "아우디", "nm": "e-tron GT", "al": ["이트론GT", "etronGT"], "kd": "승용", "og": "외산", "sl": "아우디-e-tron-gt", "tr": [{"n": "93kWh", "cc": 0, "p": 150000000, "f": "전기"}]}, {"mk": "폭스바겐", "nm": "골프", "al": ["골프", "golf"], "kd": "승용", "og": "외산", "sl": "폭스바겐-골프", "tr": [{"n": "2.0 TDI", "cc": 1968, "p": 39000000, "f": "디젤"}, {"n": "1.5 TSI", "cc": 1498, "p": 37000000, "f": "가솔린"}]}, {"mk": "폭스바겐", "nm": "제타", "al": ["제타", "jetta"], "kd": "승용", "og": "외산", "sl": "폭스바겐-제타", "tr": [{"n": "1.4 TSI", "cc": 1395, "p": 33000000, "f": "가솔린"}]}, {"mk": "폭스바겐", "nm": "파사트", "al": ["파사트", "passat"], "kd": "승용", "og": "외산", "sl": "폭스바겐-파사트", "tr": [{"n": "2.0 TDI", "cc": 1968, "p": 47000000, "f": "디젤"}]}, {"mk": "폭스바겐", "nm": "아테온", "al": ["아테온", "arteon"], "kd": "승용", "og": "외산", "sl": "폭스바겐-아테온", "tr": [{"n": "2.0 TDI", "cc": 1968, "p": 56000000, "f": "디젤"}]}, {"mk": "폭스바겐", "nm": "티구안", "al": ["티구안", "tiguan"], "kd": "승용", "og": "외산", "sl": "폭스바겐-티구안", "tr": [{"n": "2.0 TDI", "cc": 1968, "p": 48000000, "f": "디젤"}]}, {"mk": "폭스바겐", "nm": "투아렉", "al": ["투아렉", "touareg"], "kd": "승용", "og": "외산", "sl": "폭스바겐-투아렉", "tr": [{"n": "3.0 TDI", "cc": 2967, "p": 95000000, "f": "디젤"}]}, {"mk": "폭스바겐", "nm": "ID.4", "al": ["ID4", "아이디포"], "kd": "승용", "og": "외산", "sl": "폭스바겐-id4", "tr": [{"n": "82kWh", "cc": 0, "p": 59000000, "f": "전기"}]}, {"mk": "볼보", "nm": "S60", "al": ["S60", "에스60"], "kd": "승용", "og": "외산", "sl": "볼보-s60", "tr": [{"n": "B5", "cc": 1969, "p": 53000000, "f": "하이브리드"}]}, {"mk": "볼보", "nm": "S90", "al": ["S90", "에스90"], "kd": "승용", "og": "외산", "sl": "볼보-s90", "tr": [{"n": "B5", "cc": 1969, "p": 73000000, "f": "하이브리드"}]}, {"mk": "볼보", "nm": "XC40", "al": ["XC40", "엑스씨40"], "kd": "승용", "og": "외산", "sl": "볼보-xc40", "tr": [{"n": "B4", "cc": 1969, "p": 53000000, "f": "하이브리드"}]}, {"mk": "볼보", "nm": "XC60", "al": ["XC60", "엑스씨60"], "kd": "승용", "og": "외산", "sl": "볼보-xc60", "tr": [{"n": "B5", "cc": 1969, "p": 70000000, "f": "하이브리드"}]}, {"mk": "볼보", "nm": "XC90", "al": ["XC90", "엑스씨90"], "kd": "승용", "og": "외산", "sl": "볼보-xc90", "tr": [{"n": "B6", "cc": 1969, "p": 105000000, "f": "하이브리드"}]}, {"mk": "볼보", "nm": "EX30", "al": ["EX30", "이엑스30"], "kd": "승용", "og": "외산", "sl": "볼보-ex30", "tr": [{"n": "69kWh", "cc": 0, "p": 48000000, "f": "전기"}]}, {"mk": "볼보", "nm": "EX90", "al": ["EX90", "이엑스90"], "kd": "승용", "og": "외산", "sl": "볼보-ex90", "tr": [{"n": "111kWh", "cc": 0, "p": 110000000, "f": "전기"}]}, {"mk": "볼보", "nm": "C40", "al": ["C40", "씨40"], "kd": "승용", "og": "외산", "sl": "볼보-c40", "tr": [{"n": "78kWh", "cc": 0, "p": 63000000, "f": "전기"}]}, {"mk": "렉서스", "nm": "ES", "al": ["ES300h", "렉서스ES"], "kd": "승용", "og": "외산", "sl": "렉서스-es", "tr": [{"n": "ES300h", "cc": 2487, "p": 66000000, "f": "하이브리드"}]}, {"mk": "렉서스", "nm": "IS", "al": ["IS300h", "렉서스IS"], "kd": "승용", "og": "외산", "sl": "렉서스-is", "tr": [{"n": "IS300h", "cc": 2487, "p": 57000000, "f": "하이브리드"}]}, {"mk": "렉서스", "nm": "UX", "al": ["UX300h", "렉서스UX"], "kd": "승용", "og": "외산", "sl": "렉서스-ux", "tr": [{"n": "UX300h", "cc": 1987, "p": 53000000, "f": "하이브리드"}]}, {"mk": "렉서스", "nm": "NX", "al": ["NX350h", "렉서스NX"], "kd": "승용", "og": "외산", "sl": "렉서스-nx", "tr": [{"n": "NX350h", "cc": 2487, "p": 69000000, "f": "하이브리드"}]}, {"mk": "렉서스", "nm": "RX", "al": ["RX350h", "렉서스RX"], "kd": "승용", "og": "외산", "sl": "렉서스-rx", "tr": [{"n": "RX350h", "cc": 2487, "p": 93000000, "f": "하이브리드"}]}, {"mk": "렉서스", "nm": "LM", "al": ["LM500h", "렉서스LM"], "kd": "승용", "og": "외산", "sl": "렉서스-lm", "tr": [{"n": "LM500h", "cc": 2393, "p": 200000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "캠리", "al": ["캠리", "camry"], "kd": "승용", "og": "외산", "sl": "토요타-캠리", "tr": [{"n": "2.5 하이브리드", "cc": 2487, "p": 46000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "프리우스", "al": ["프리우스", "prius"], "kd": "승용", "og": "외산", "sl": "토요타-프리우스", "tr": [{"n": "2.0 하이브리드", "cc": 1987, "p": 44000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "라브4", "al": ["라브4", "RAV4"], "kd": "승용", "og": "외산", "sl": "토요타-라브4", "tr": [{"n": "2.5 하이브리드", "cc": 2487, "p": 50000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "시에나", "al": ["시에나", "sienna"], "kd": "승용", "og": "외산", "sl": "토요타-시에나", "tr": [{"n": "2.5 하이브리드", "cc": 2487, "p": 64000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "알파드", "al": ["알파드", "alphard"], "kd": "승용", "og": "외산", "sl": "토요타-알파드", "tr": [{"n": "2.5 하이브리드", "cc": 2487, "p": 95000000, "f": "하이브리드"}]}, {"mk": "토요타", "nm": "크라운", "al": ["크라운", "crown"], "kd": "승용", "og": "외산", "sl": "토요타-크라운", "tr": [{"n": "2.5 하이브리드", "cc": 2487, "p": 60000000, "f": "하이브리드"}]}, {"mk": "혼다", "nm": "어코드", "al": ["어코드", "accord"], "kd": "승용", "og": "외산", "sl": "혼다-어코드", "tr": [{"n": "2.0 하이브리드", "cc": 1993, "p": 48000000, "f": "하이브리드"}]}, {"mk": "혼다", "nm": "CR-V", "al": ["CRV", "씨알브이"], "kd": "승용", "og": "외산", "sl": "혼다-cr-v", "tr": [{"n": "2.0 하이브리드", "cc": 1993, "p": 51000000, "f": "하이브리드"}]}, {"mk": "혼다", "nm": "파일럿", "al": ["파일럿", "pilot"], "kd": "승용", "og": "외산", "sl": "혼다-파일럿", "tr": [{"n": "3.5 가솔린", "cc": 3471, "p": 68000000, "f": "가솔린"}]}, {"mk": "혼다", "nm": "오딧세이", "al": ["오딧세이", "odyssey"], "kd": "승용", "og": "외산", "sl": "혼다-오딧세이", "tr": [{"n": "3.5 가솔린", "cc": 3471, "p": 65000000, "f": "가솔린"}]}, {"mk": "포드", "nm": "익스플로러", "al": ["익스플로러", "explorer"], "kd": "승용", "og": "외산", "sl": "포드-익스플로러", "tr": [{"n": "2.3 터보", "cc": 2264, "p": 65000000, "f": "가솔린"}]}, {"mk": "포드", "nm": "머스탱", "al": ["머스탱", "mustang"], "kd": "승용", "og": "외산", "sl": "포드-머스탱", "tr": [{"n": "5.0 GT", "cc": 5038, "p": 85000000, "f": "가솔린"}]}, {"mk": "포드", "nm": "브롱코", "al": ["브롱코", "bronco"], "kd": "승용", "og": "외산", "sl": "포드-브롱코", "tr": [{"n": "2.7 터보", "cc": 2694, "p": 75000000, "f": "가솔린"}]}, {"mk": "포드", "nm": "F-150", "al": ["F150", "에프150"], "kd": "화물", "og": "외산", "sl": "포드-f-150", "tr": [{"n": "3.5 터보", "cc": 3496, "p": 85000000, "f": "가솔린"}]}, {"mk": "지프", "nm": "랭글러", "al": ["랭글러", "wrangler"], "kd": "승용", "og": "외산", "sl": "지프-랭글러", "tr": [{"n": "2.0 터보", "cc": 1995, "p": 72000000, "f": "가솔린"}]}, {"mk": "지프", "nm": "그랜드 체로키", "al": ["그랜드체로키", "체로키"], "kd": "승용", "og": "외산", "sl": "지프-그랜드-체로키", "tr": [{"n": "2.0 터보", "cc": 1995, "p": 85000000, "f": "가솔린"}]}, {"mk": "지프", "nm": "레니게이드", "al": ["레니게이드", "renegade"], "kd": "승용", "og": "외산", "sl": "지프-레니게이드", "tr": [{"n": "1.3 터보", "cc": 1332, "p": 42000000, "f": "가솔린"}]}, {"mk": "지프", "nm": "컴패스", "al": ["컴패스", "compass"], "kd": "승용", "og": "외산", "sl": "지프-컴패스", "tr": [{"n": "1.3 터보", "cc": 1332, "p": 46000000, "f": "가솔린"}]}, {"mk": "캐딜락", "nm": "에스컬레이드", "al": ["에스컬레이드", "escalade"], "kd": "승용", "og": "외산", "sl": "캐딜락-에스컬레이드", "tr": [{"n": "6.2 가솔린", "cc": 6162, "p": 150000000, "f": "가솔린"}]}, {"mk": "캐딜락", "nm": "XT4", "al": ["XT4", "엑스티포"], "kd": "승용", "og": "외산", "sl": "캐딜락-xt4", "tr": [{"n": "2.0 터보", "cc": 1998, "p": 58000000, "f": "가솔린"}]}, {"mk": "캐딜락", "nm": "XT5", "al": ["XT5", "엑스티파이브"], "kd": "승용", "og": "외산", "sl": "캐딜락-xt5", "tr": [{"n": "2.0 터보", "cc": 1998, "p": 70000000, "f": "가솔린"}]}, {"mk": "캐딜락", "nm": "리릭", "al": ["리릭", "lyriq"], "kd": "승용", "og": "외산", "sl": "캐딜락-리릭", "tr": [{"n": "102kWh", "cc": 0, "p": 100000000, "f": "전기"}]}, {"mk": "링컨", "nm": "에비에이터", "al": ["에비에이터", "aviator"], "kd": "승용", "og": "외산", "sl": "링컨-에비에이터", "tr": [{"n": "3.0 터보", "cc": 2956, "p": 95000000, "f": "가솔린"}]}, {"mk": "링컨", "nm": "노틸러스", "al": ["노틸러스", "nautilus"], "kd": "승용", "og": "외산", "sl": "링컨-노틸러스", "tr": [{"n": "2.0 터보", "cc": 1995, "p": 75000000, "f": "가솔린"}]}, {"mk": "GMC", "nm": "시에라", "al": ["시에라", "sierra"], "kd": "화물", "og": "외산", "sl": "gmc-시에라", "tr": [{"n": "6.2 가솔린", "cc": 6162, "p": 100000000, "f": "가솔린"}]}, {"mk": "포르쉐", "nm": "911", "al": ["911", "구일일", "카레라"], "kd": "승용", "og": "외산", "sl": "포르쉐-911", "tr": [{"n": "카레라", "cc": 2981, "p": 180000000, "f": "가솔린"}]}, {"mk": "포르쉐", "nm": "카이엔", "al": ["카이엔", "cayenne"], "kd": "승용", "og": "외산", "sl": "포르쉐-카이엔", "tr": [{"n": "3.0 터보", "cc": 2995, "p": 135000000, "f": "가솔린"}]}, {"mk": "포르쉐", "nm": "마칸", "al": ["마칸", "macan"], "kd": "승용", "og": "외산", "sl": "포르쉐-마칸", "tr": [{"n": "2.0 터보", "cc": 1984, "p": 95000000, "f": "가솔린"}]}, {"mk": "포르쉐", "nm": "파나메라", "al": ["파나메라", "panamera"], "kd": "승용", "og": "외산", "sl": "포르쉐-파나메라", "tr": [{"n": "2.9 터보", "cc": 2894, "p": 160000000, "f": "가솔린"}]}, {"mk": "포르쉐", "nm": "타이칸", "al": ["타이칸", "taycan"], "kd": "승용", "og": "외산", "sl": "포르쉐-타이칸", "tr": [{"n": "93kWh", "cc": 0, "p": 155000000, "f": "전기"}]}, {"mk": "미니", "nm": "쿠퍼", "al": ["미니쿠퍼", "cooper"], "kd": "승용", "og": "외산", "sl": "미니-쿠퍼", "tr": [{"n": "쿠퍼 S", "cc": 1998, "p": 48000000, "f": "가솔린"}]}, {"mk": "미니", "nm": "컨트리맨", "al": ["컨트리맨", "countryman"], "kd": "승용", "og": "외산", "sl": "미니-컨트리맨", "tr": [{"n": "쿠퍼 S", "cc": 1998, "p": 55000000, "f": "가솔린"}]}, {"mk": "랜드로버", "nm": "디펜더", "al": ["디펜더", "defender"], "kd": "승용", "og": "외산", "sl": "랜드로버-디펜더", "tr": [{"n": "3.0 디젤", "cc": 2996, "p": 110000000, "f": "디젤"}]}, {"mk": "랜드로버", "nm": "디스커버리", "al": ["디스커버리", "discovery"], "kd": "승용", "og": "외산", "sl": "랜드로버-디스커버리", "tr": [{"n": "3.0 디젤", "cc": 2996, "p": 115000000, "f": "디젤"}]}, {"mk": "랜드로버", "nm": "레인지로버", "al": ["레인지로버", "rangerover"], "kd": "승용", "og": "외산", "sl": "랜드로버-레인지로버", "tr": [{"n": "3.0 가솔린", "cc": 2996, "p": 200000000, "f": "가솔린"}]}, {"mk": "랜드로버", "nm": "레인지로버 스포츠", "al": ["레인지로버스포츠"], "kd": "승용", "og": "외산", "sl": "랜드로버-레인지로버-스포츠", "tr": [{"n": "3.0 가솔린", "cc": 2996, "p": 155000000, "f": "가솔린"}]}, {"mk": "랜드로버", "nm": "이보크", "al": ["이보크", "evoque"], "kd": "승용", "og": "외산", "sl": "랜드로버-이보크", "tr": [{"n": "2.0 가솔린", "cc": 1997, "p": 80000000, "f": "가솔린"}]}, {"mk": "재규어", "nm": "F-PACE", "al": ["F페이스", "에프페이스"], "kd": "승용", "og": "외산", "sl": "재규어-f-pace", "tr": [{"n": "2.0 가솔린", "cc": 1997, "p": 90000000, "f": "가솔린"}]}, {"mk": "마세라티", "nm": "그레칼레", "al": ["그레칼레", "grecale"], "kd": "승용", "og": "외산", "sl": "마세라티-그레칼레", "tr": [{"n": "2.0 터보", "cc": 1995, "p": 110000000, "f": "가솔린"}]}, {"mk": "마세라티", "nm": "르반떼", "al": ["르반떼", "levante"], "kd": "승용", "og": "외산", "sl": "마세라티-르반떼", "tr": [{"n": "3.0 터보", "cc": 2979, "p": 140000000, "f": "가솔린"}]}, {"mk": "벤틀리", "nm": "벤테이가", "al": ["벤테이가", "bentayga"], "kd": "승용", "og": "외산", "sl": "벤틀리-벤테이가", "tr": [{"n": "4.0 터보", "cc": 3996, "p": 300000000, "f": "가솔린"}]}, {"mk": "람보르기니", "nm": "우루스", "al": ["우루스", "urus"], "kd": "승용", "og": "외산", "sl": "람보르기니-우루스", "tr": [{"n": "4.0 터보", "cc": 3996, "p": 330000000, "f": "가솔린"}]}, {"mk": "페라리", "nm": "로마", "al": ["페라리로마", "roma"], "kd": "승용", "og": "외산", "sl": "페라리-로마", "tr": [{"n": "3.9 터보", "cc": 3855, "p": 330000000, "f": "가솔린"}]}, {"mk": "롤스로이스", "nm": "컬리넌", "al": ["컬리넌", "cullinan"], "kd": "승용", "og": "외산", "sl": "롤스로이스-컬리넌", "tr": [{"n": "6.75 터보", "cc": 6749, "p": 600000000, "f": "가솔린"}]}, {"mk": "푸조", "nm": "2008", "al": ["푸조2008"], "kd": "승용", "og": "외산", "sl": "푸조-2008", "tr": [{"n": "1.2 터보", "cc": 1199, "p": 36000000, "f": "가솔린"}]}, {"mk": "푸조", "nm": "3008", "al": ["푸조3008"], "kd": "승용", "og": "외산", "sl": "푸조-3008", "tr": [{"n": "1.2 터보", "cc": 1199, "p": 43000000, "f": "가솔린"}]}, {"mk": "푸조", "nm": "5008", "al": ["푸조5008"], "kd": "승용", "og": "외산", "sl": "푸조-5008", "tr": [{"n": "1.5 디젤", "cc": 1499, "p": 48000000, "f": "디젤"}]}, {"mk": "폴스타", "nm": "폴스타 2", "al": ["폴스타2", "polestar2"], "kd": "승용", "og": "외산", "sl": "폴스타-폴스타-2", "tr": [{"n": "82kWh", "cc": 0, "p": 58000000, "f": "전기"}]}, {"mk": "폴스타", "nm": "폴스타 4", "al": ["폴스타4", "polestar4"], "kd": "승용", "og": "외산", "sl": "폴스타-폴스타-4", "tr": [{"n": "100kWh", "cc": 0, "p": 75000000, "f": "전기"}]}, {"mk": "BYD", "nm": "아토 3", "al": ["아토3", "atto3"], "kd": "승용", "og": "외산", "sl": "byd-아토-3", "tr": [{"n": "60kWh", "cc": 0, "p": 32000000, "f": "전기"}]}, {"mk": "BYD", "nm": "씰", "al": ["BYD씰", "seal"], "kd": "승용", "og": "외산", "sl": "byd-씰", "tr": [{"n": "82kWh", "cc": 0, "p": 47000000, "f": "전기"}]}, {"mk": "BYD", "nm": "씨라이언 7", "al": ["씨라이언7", "sealion7"], "kd": "승용", "og": "외산", "sl": "byd-씨라이언-7", "tr": [{"n": "82kWh", "cc": 0, "p": 50000000, "f": "전기"}]}], "ccRate": {"비영업용": [[1000, 80], [1600, 140], [1000000000, 200]], "영업용": [[1000, 18], [1600, 18], [2000, 19], [2500, 19], [1000000000, 24]]}, "evFlat": {"비영업용": 100000, "영업용": 20000}, "busFlat": {"비영업용": 65000, "영업용": 25000}, "truckFlat": {"비영업용": 28500, "영업용": 6600}, "edu": 0.3, "ageStep": 0.05, "ageBase": 2, "ageMax": 12, "acq": {"승용": {"비영업용": 0.07, "영업용": 0.04, "label": "승용자동차"}, "경차": {"비영업용": 0.04, "영업용": 0.04, "label": "경형자동차(1,000cc 미만)"}, "승합": {"비영업용": 0.05, "영업용": 0.04, "label": "승합자동차"}, "승합대형": {"비영업용": 0.05, "영업용": 0.04, "label": "승합자동차(16인승 이상)"}, "화물": {"비영업용": 0.05, "영업용": 0.04, "label": "화물자동차"}, "이륜125이하": {"비영업용": 0.02, "영업용": 0.02, "label": "125cc 이하 이륜자동차"}}, "exempt": {"경차": 750000, "전기차": 1400000, "수소차": 1400000, "하이브리드": 400000, "다자녀": 1400000, "장애인": null}, "bond": {"서울": [[1600, 0.0], [2000, 0.12], [1000000000, 0.2]], "부산": [[1600, 0.0], [2000, 0.0], [1000000000, 0.05]], "대구": [[1600, 0.0], [2000, 0.0], [1000000000, 0.05]], "인천": [[1600, 0.0], [2000, 0.08], [1000000000, 0.05]], "광주": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "대전": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "울산": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "세종": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "경기": [[1600, 0.0], [2000, 0.04], [1000000000, 0.06]], "강원": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "충북": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "충남": [[1600, 0.0], [2000, 0.04], [1000000000, 0.12]], "전북": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "전남": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "경북": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "경남": [[1600, 0.0], [2000, 0.04], [1000000000, 0.05]], "제주": [[1600, 0.0], [2000, 0.0], [1000000000, 0.05]]}, "bondDiscount": 0.02, "bondUnit": 5000, "bondEvLimit": 2500000, "bondHevLimit": 1400000, "prepay": 0.03, "prepayWindows": [["1월", 1, 334, "1월 16일 ~ 1월 31일"], ["3월", 3, 275, "3월 16일 ~ 3월 31일"], ["6월", 6, 184, "6월 16일 ~ 6월 30일"], ["9월", 9, 92, "9월 16일 ~ 9월 30일"]], "yearDays": 365, "residual": {"국산": {"0": 0.739, "1": 0.681, "2": 0.577, "3": 0.489, "4": 0.414, "5": 0.351}, "외산": {"0": 0.753, "1": 0.685, "2": 0.569, "3": 0.472, "4": 0.391, "5": 0.324}}, "decay": {"국산": 0.8475, "외산": 0.8288}, "fees": {"번호판 발급": 5000, "증지대": 3000, "인지대": 1000}, "year": 2026};</script>
+<script>
+const D = window.__DATA__;
+const CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+function initials(s){let o="";for(const ch of s){const c=ch.charCodeAt(0);
+  if(c>=0xAC00&&c<=0xD7A3){o+=CHO[Math.floor((c-0xAC00)/588)];}else{o+=ch;}}return o.toLowerCase();}
+function norm(s){return (s||"").toLowerCase().replace(/\s|-/g,"");}
+function won(n){return Math.round(n).toLocaleString("ko-KR")+"원";}
+
+/* ── 검색 ── */
+const IDX = D.models.map(m=>({m, keys:[norm(m.mk+m.nm), norm(m.nm), ...m.al.map(norm),
+  initials(m.nm.replace(/\s/g,"")), initials(m.mk+m.nm)]}));
+function search(q){
+  q = norm(q); if(!q) return [];
+  const starts=[], has=[];
+  for(const it of IDX){
+    if(it.keys.some(k=>k.startsWith(q))) starts.push(it.m);
+    else if(it.keys.some(k=>k.includes(q))) has.push(it.m);
+  }
+  return starts.concat(has).slice(0,40);
+}
+
+/* ── 세금 계산 ── */
+function residual(age, origin){
+  const t = D.residual[origin] || D.residual["국산"];
+  if(t[age]!==undefined) return t[age];
+  const last = Math.max(...Object.keys(t).map(Number));
+  const r = t[last] * Math.pow(D.decay[origin]||0.8475, Math.min(age,20)-last);
+  return Math.max(Math.round(r*10000)/10000, 0.05);
+}
+/* 차령 n : 최초등록일 기준. 1~6월 등록은 (과세연도-등록연도)+1, 7~12월은 1기분만 -1 */
+function carAges(regYear, regMonth, taxYear){
+  const d = taxYear - regYear;
+  return regMonth <= 6 ? [d+1, d+1] : [d, d+1];
+}
+function ageDiscount(n){
+  const steps = Math.min(Math.max(n - D.ageBase, 0), D.ageMax - D.ageBase);
+  return Math.round(steps * D.ageStep * 100) / 100;
+}
+/* 각 기분세액 = A/2 − (A/2 × 5/100)(n−2), 기분마다 10원 미만 절사 */
+function carTax(cc, fuel, ages, commercial, kind){
+  const use = commercial ? "영업용" : "비영업용";
+  const flat = b => {
+    const h = Math.floor(b/2);
+    return {base:b, edu:0, total:b, disc:0, halves:[[h,0],[b-h,0]]};
+  };
+  if(kind==="승합") return Object.assign(flat(D.busFlat[use]), {flatKind:"승합"});
+  if(kind==="화물") return Object.assign(flat(D.truckFlat[use]), {flatKind:"화물"});
+  if(fuel==="전기"||fuel==="수소"||!cc){
+    const b = D.evFlat[use], h = Math.floor(b/2);
+    const hv = [[h, commercial?0:Math.floor(h*D.edu)], [b-h, commercial?0:Math.floor((b-h)*D.edu)]];
+    const edu = hv[0][1]+hv[1][1];
+    return {base:b, edu, total:b+edu, disc:0, halves:hv, flatKind:"전기"};
+  }
+  const row = D.ccRate[use].find(r=>cc<=r[0]);
+  const A = cc*row[1];
+  let halves=[], disc=0;
+  for(const n of ages){
+    const d = commercial ? 0 : ageDiscount(n);
+    if(d>disc) disc = d;
+    const h = Math.floor(A/2*(1-d)/10)*10;
+    const e = commercial ? 0 : Math.floor(h*D.edu/10)*10;
+    halves.push([h,e]);
+  }
+  const base = halves[0][0]+halves[1][0], edu = halves[0][1]+halves[1][1];
+  return {base, edu, total:base+edu, disc, halves};
+}
+function acqTax(price, kind, fuel, commercial, extra){
+  const basis = Math.floor(price/1.1);
+  const use = commercial ? "영업용" : "비영업용";
+  const isLight = kind==="경차" && fuel!=="전기" && fuel!=="수소";
+  const key = isLight ? "경차" : (kind==="경차" ? "승용" : (D.acq[kind] ? kind : "승용"));
+  const rate = D.acq[key][use];
+  const tax = Math.floor(basis*rate/10)*10;
+  const cands = [];
+  if(isLight) cands.push(["경차 면제", Math.min(tax, D.exempt["경차"])]);
+  if(fuel==="전기"||fuel==="수소") cands.push(["전기·수소차 감면", Math.min(tax, D.exempt["전기차"])]);
+  if(fuel==="하이브리드") cands.push(["하이브리드 감면", Math.min(tax, D.exempt["하이브리드"])]);
+  if(extra==="다자녀"){
+    const full = (kind==="승합"||kind==="화물") ? tax : Math.min(tax, D.exempt["다자녀"]);
+    cands.push(["다자녀 감면", full]);
+  }
+  if(extra==="장애인") cands.push(["장애인·국가유공자 면제", tax]);
+  let name="", amt=0;
+  for(const c of cands){ if(c[1]>amt){ name=c[0]; amt=c[1]; } }
+  return {basis, rate, tax, cut:amt, cutName:name, net:tax-amt};
+}
+function bondCost(basis, cc, fuel, region, commercial, kind){
+  if(commercial) return {buy:0, loss:0, note:"영업용 채권 기준은 지자체마다 달라 계산에서 제외했습니다"};
+  if(fuel==="전기"||fuel==="수소")
+    return {buy:0, loss:0, note:"전기·수소차는 채권 매입이 250만원 한도로 면제됩니다 (2026.12.31까지)"};
+  if(kind==="경차") return {buy:0, loss:0, note:"경차는 전 지역에서 채권 매입이 면제됩니다"};
+  if(kind==="승합"||kind==="화물")
+    return {buy:0, loss:0, note:"승합·화물자동차 채권 기준은 지자체마다 달라 계산에서 제외했습니다"};
+  if(cc && cc < 1600)
+    return {buy:0, loss:0, note:"1,600cc 미만은 2023년 3월부터 전국에서 면제입니다"};
+  const table = D.bond[region]; if(!table) return {buy:0, loss:0, note:""};
+  const row = table.find(r=>cc<=r[0]) || table[table.length-1];
+  const rate = row[1];
+  let buy = Math.ceil(basis*rate/D.bondUnit)*D.bondUnit;
+  let note = "";
+  if(fuel==="하이브리드"){
+    const cut = Math.min(buy, D.bondHevLimit);
+    if(cut>0){ buy -= cut; note = "하이브리드 채권 면제 "+won(cut)+" 적용"; }
+  }
+  return {buy, loss: Math.round(buy*D.bondDiscount), rate, note};
+}
+
+/* ── 상태 ── */
+const S = {mode:"new", model:null, trim:null, cc:1598, price:20000000,
+  fuel:"가솔린", kind:"승용", origin:"국산", regYear:D.year, regMonth:1,
+  region:"서울", commercial:false, extra:""};
+
+/* ── UI ── */
+const $ = s=>document.querySelector(s);
+function el(id){return document.getElementById(id);}
+
+function renderAC(list){
+  const box = el("ac");
+  if(!list.length){ box.style.display="none"; return; }
+  box.innerHTML = list.map((m,i)=>
+    `<div data-i="${i}"><b>${m.mk} ${m.nm}</b><small>${m.kd} · ${m.tr.length}개 트림</small></div>`).join("");
+  box.style.display="block";
+  box.querySelectorAll("div").forEach(d=>{
+    d.onclick=()=>{ pickModel(list[+d.dataset.i]); box.style.display="none"; };
+  });
+}
+function pickModel(m){
+  S.model=m; S.kind=m.kd; S.origin=m.og;
+  el("q").value = m.mk+" "+m.nm;
+  const sel = el("trim");
+  sel.innerHTML = m.tr.map((t,i)=>
+    `<option value="${i}">${t.n} — ${t.cc?t.cc.toLocaleString()+"cc":"전기"} · ${(t.p/10000).toLocaleString()}만원</option>`).join("");
+  sel.parentElement.style.display="block";
+  pickTrim(0);
+}
+function pickTrim(i){
+  const t = S.model.tr[i]; S.trim=t; S.cc=t.cc; S.price=t.p; S.fuel=t.f;
+  el("cc").value = t.cc; el("price").value = Math.round(t.p/10000);
+  el("fuel").value = t.f;
+  calc();
+}
+function calc(){
+  S.cc = +el("cc").value||0;
+  S.price = (+el("price").value||0)*10000;
+  S.fuel = el("fuel").value;
+  S.regYear = +el("regYear").value||D.year;
+  S.regMonth = +el("regMonth").value||1;
+  S.region = el("region").value;
+  S.commercial = el("use").value==="영업용";
+  const ages = carAges(S.regYear, S.regMonth, D.year);
+  const age = Math.max(0, D.year - S.regYear);
+
+  // 중고차: 시가표준액 추정
+  let taxPrice = S.price, basisNote="";
+  if(S.mode==="used"){
+    const std = Math.floor(S.price/1.1*residual(age, S.origin))*1.1;
+    const deal = (+el("deal").value||0)*10000;
+    taxPrice = Math.max(std, deal);
+    basisNote = deal>std
+      ? `실거래가(${won(deal)})가 시가표준액(${won(std)})보다 높아 실거래가 기준`
+      : `시가표준액 ${won(std)} 기준 (잔가율 ${residual(age,S.origin)}, 경과 ${age}년)`;
+  }
+
+  const a = acqTax(taxPrice, S.kind, S.fuel, S.commercial, S.extra);
+  const b = bondCost(a.basis, S.cc, S.fuel, S.region, S.commercial, S.kind);
+  const fees = Object.values(D.fees).reduce((x,y)=>x+y,0);
+  const c = carTax(S.cc, S.fuel, ages, S.commercial, S.kind);
+
+  // 연납
+  const pre = D.prepayWindows.map(w=>{
+    const cut = Math.floor(c.total * w[2]/D.yearDays * D.prepay / 10)*10;
+    return {label:w[0], days:w[2], period:w[3], pay:c.total-cut, cut};
+  });
+
+  let html = `<div class="out">
+    <h3>취득 단계</h3>
+    <div class="row"><span>과세표준 (부가세 제외)</span><b>${won(a.basis)}</b></div>
+    <div class="row"><span>취득세 ${(a.rate*100).toFixed(0)}%</span><b>${won(a.tax)}</b></div>`;
+  if(a.cut>0) html += `<div class="row"><span>${a.cutName}</span><b class="neg">−${won(a.cut)}</b></div>`;
+  if(b.buy>0){
+    html += `<div class="row"><span>공채 매입 (${S.region}${b.rate?" "+(b.rate*100).toFixed(0)+"%":""})</span><b>${won(b.buy)}</b></div>`;
+    html += `<div class="row"><span>└ 즉시매도 시 실부담</span><b>${won(b.loss)}</b></div>`;
+  }
+  html += `<div class="row"><span>번호판·증지 등 부대비용</span><b>${won(fees)}</b></div>`;
+  html += `<div class="row total"><span>등록 시 실부담 합계</span><span>${won(a.net + b.loss + fees)}</span></div>`;
+  if(b.buy>0) html += `<div class="mini">공채를 만기까지 보유하면 원금을 돌려받습니다. 즉시매도 기준으로 계산했습니다.</div>`;
+  if(b.note) html += `<div class="mini">${b.note}</div>`;
+  if(basisNote) html += `<div class="mini">${basisNote}</div>`;
+  if(S.extra==="장애인" && S.cc > 2000 && S.kind==="승용")
+    html += `<div class="mini" style="color:var(--stop)">장애인·국가유공자 면제는 배기량 2,000cc 이하 승용차가 원칙입니다.
+      2,000cc를 넘는 차는 승차정원 7~10인승이어야 대상이 됩니다. 요건을 확인하세요.</div>`;
+  if(S.extra==="다자녀" && S.kind==="승용")
+    html += `<div class="mini">6인승 이하 승용차는 140만원 한도, 7~10인승은 한도 없이 전액 면제입니다.
+      위 계산은 6인승 이하 기준입니다.</div>`;
+  if(a.cut>0) html += `<div class="mini">감면은 중복 적용되지 않고 가장 유리한 하나만 적용됩니다 (지방세특례제한법 제180조).</div>`;
+  html += `</div>`;
+
+  const h1 = c.halves[0][0]+c.halves[0][1], h2 = c.halves[1][0]+c.halves[1][1];
+  const ageTxt = c.flatKind ? "" :
+    (ages[0]===ages[1] ? ` (차령 ${ages[0]}년${c.disc?`, ${(c.disc*100).toFixed(0)}% 경감`:""})`
+                       : ` (차령 1기분 ${ages[0]}년 · 2기분 ${ages[1]}년)`);
+  html += `<div class="out" style="margin-top:14px">
+    <h3>보유 단계 — 연간 자동차세</h3>
+    <div class="row"><span>자동차세${ageTxt}</span><b>${won(c.base)}</b></div>`;
+  if(!S.commercial && !c.flatKind) html += `<div class="row"><span>지방교육세 30%</span><b>${won(c.edu)}</b></div>`;
+  html += `<div class="row total"><span>연간 납부액</span><span>${won(c.total)}</span></div>
+    <div class="mini">6월(1기분) ${won(h1)} + 12월(2기분) ${won(h2)}</div>`;
+  if(!c.flatKind) html += `<div class="mini">기분마다 <b>A/2 − (A/2 × 5/100)(n−2)</b> 로 계산하고 각각 10원 미만을 절사합니다 (지방세법 제127조 제3항).</div>`;
+  if(c.flatKind==="승합") html += `<div class="mini">승합자동차(11~15인승)는 배기량과 무관하게 정액으로 과세하고 지방교육세가 붙지 않습니다. 차령 경감도 없습니다.</div>`;
+  if(c.flatKind==="화물") html += `<div class="mini">화물자동차는 적재량 기준 정액입니다. 위 금액은 1,000kg 이하 기준이며 지방교육세가 붙지 않습니다.</div>`;
+  if(c.flatKind==="전기") html += `<div class="mini">전기·수소차는 정액 과세라 차령이 지나도 줄어들지 않습니다.</div>`;
+  html += `</div>`;
+
+  html += `<div class="out" style="margin-top:14px">
+    <h3>연납 할인 (공제율 ${(D.prepay*100).toFixed(0)}%)</h3>`;
+  pre.forEach(p=>{
+    html += `<div class="row"><span>${p.label} 연납 <small style="color:var(--muted)">${p.period} · ${p.days}일분</small></span>
+      <b>${won(p.pay)} <span class="neg">(−${won(p.cut)})</span></b></div>`;
+  });
+  html += `<div class="mini">공제액 = 연세액 × (납부기한 다음날부터 12/31까지 일수 ÷ ${D.yearDays}) × ${(D.prepay*100).toFixed(0)}%.
+    1월 연납도 334일분이라 실질 할인은 약 2.74%입니다.</div>
+    <div class="mini">3·6·9월 연납액은 이미 도래한 기분의 납부 여부에 따라 지자체 산출과 다를 수 있습니다.</div></div>`;
+
+  el("result").innerHTML = html;
+}
+
+/* ── 이벤트 ── */
+function boot(){
+  el("q").addEventListener("input", e=>renderAC(search(e.target.value)));
+  el("q").addEventListener("focus", e=>{ if(e.target.value) renderAC(search(e.target.value)); });
+  document.addEventListener("click", e=>{ if(!e.target.closest(".results")) el("ac").style.display="none"; });
+  el("trim").addEventListener("change", e=>pickTrim(+e.target.value));
+  ["cc","price","fuel","regYear","regMonth","region","use","deal"].forEach(id=>{
+    const n = el(id); if(n) n.addEventListener("input", calc), n.addEventListener("change", calc);
+  });
+  document.querySelectorAll(".tabs button").forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on"); S.mode=b.dataset.mode;
+      el("usedbox").style.display = S.mode==="used" ? "block" : "none";
+      calc();
+    };
+  });
+  document.querySelectorAll("#extras button").forEach(b=>{
+    b.onclick=()=>{
+      const on = b.classList.contains("on");
+      document.querySelectorAll("#extras button").forEach(x=>x.classList.remove("on"));
+      if(!on){ b.classList.add("on"); S.extra=b.dataset.v; } else { S.extra=""; }
+      calc();
+    };
+  });
+  // ?q= 딥링크
+  const p = new URLSearchParams(location.search);
+  if(p.get("q")){ const r = search(p.get("q")); if(r.length) pickModel(r[0]); }
+  else if(p.get("m")){ const m = D.models.find(x=>x.sl===p.get("m")); if(m) pickModel(m); }
+  else calc();
+}
+document.addEventListener("DOMContentLoaded", boot);
+</script>
+<script>
+function postH(){
+  try{ parent.postMessage({cartaxHeight: document.documentElement.scrollHeight}, "*"); }catch(e){}
+}
+new MutationObserver(postH).observe(document.body, {subtree:true, childList:true, characterData:true});
+window.addEventListener("load", postH);
+setInterval(postH, 800);
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+# 애드센스 승인 후 _config.py 의 ADSENSE_CLIENT 를 채우고 다시 빌드하세요.
