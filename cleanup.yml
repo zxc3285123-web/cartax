@@ -1,0 +1,32 @@
+name: 저장소 정리
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 잘못 올라간 파일 삭제
+        run: |
+          keep="docs _build.py _cars.py _config.py _posts.py _rates.py README.md CNAME"
+          for f in *; do
+            case " $keep " in
+              *" $f "*) echo "유지  $f" ;;
+              *)        echo "삭제  $f"; rm -rf "$f" ;;
+            esac
+          done
+          rm -f .github/workflows/cleanup.yml
+
+      - name: 커밋
+        run: |
+          git config user.name  github-actions
+          git config user.email actions@github.com
+          git add -A
+          git diff --staged --quiet || git commit -m "잘못 올라간 파일 정리"
+          git push
