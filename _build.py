@@ -129,6 +129,13 @@ if C.ADSENSE_CLIENT:
     ADS = ('<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='
            + C.ADSENSE_CLIENT + '" crossorigin="anonymous"></script>')
 
+# 검색엔진 소유확인 메타태그 — 모든 페이지 <head> 에 들어가므로 재빌드해도 유지됩니다.
+VERIFY = ""
+if getattr(C, "GOOGLE_VERIFY", ""):
+    VERIFY += f'\n<meta name="google-site-verification" content="{C.GOOGLE_VERIFY}">'
+if getattr(C, "NAVER_VERIFY", ""):
+    VERIFY += f'\n<meta name="naver-site-verification" content="{C.NAVER_VERIFY}">'
+
 
 def page(title, desc, body, canonical, extra_head="", extra_js=""):
     full_title = title if title == C.SITE_NAME else f"{title} | {C.SITE_NAME}"
@@ -147,7 +154,7 @@ def page(title, desc, body, canonical, extra_head="", extra_js=""):
 <meta property="og:site_name" content="{C.SITE_NAME}">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f9e8f'/><circle cx='16' cy='9' r='3.4' fill='%233aa76d'/><circle cx='16' cy='16' r='3.4' fill='%23e8a33d'/><circle cx='16' cy='23' r='3.4' fill='%23e05c5c'/></svg>">
-<style>{CSS}</style>
+<style>{CSS}</style>{VERIFY}
 {ADS}
 {extra_head}
 </head>
@@ -188,34 +195,50 @@ def write(path, content):
 # ─────────────────────────────────────────────────────────────
 # 계산 로직 (파이썬 쪽 — 정적 페이지의 미리 계산된 값에 사용)
 # ─────────────────────────────────────────────────────────────
-def car_tax(cc, fuel, age=0, commercial=False, kind="승용"):
-    """연간 자동차세(교육세 포함) 계산. 반환: (본세, 교육세, 합계, 경감률)
+def car_tax(cc, fuel, ages=(2, 2), commercial=False, kind="승용"):
+    """연간 자동차세(교육세 포함) 계산.
+
+    지방세법 제127조 제3항의 산식을 그대로 따릅니다.
+        각 기분세액 = A/2 − (A/2 × 5/100) × (n − 2)
+    기분(반기)마다 따로 계산하고 각각 10원 미만을 절사한 뒤 합산합니다.
+
+    ages : (1기분 차령, 2기분 차령). R.car_age() 로 구합니다.
+    반환 : (본세 합계, 교육세 합계, 총액, 경감률, 기분별 내역)
 
     승합·화물자동차는 배기량이 아니라 인승·적재량 기준 정액이며
     지방교육세도 붙지 않습니다. 연료(전기 포함)와도 무관합니다.
     """
     use = "영업용" if commercial else "비영업용"
+
+    def flat(b):
+        h = b // 2
+        halves = [(h, 0), (b - h, 0)]
+        return b, 0, b, 0.0, halves
+
     if kind == "승합":
-        b = R.CAR_TAX_BUS_DEFAULT[use]
-        return b, 0, b, 0.0
+        return flat(R.CAR_TAX_BUS_DEFAULT[use])
     if kind == "화물":
-        b = R.CAR_TAX_TRUCK_DEFAULT[use]
-        return b, 0, b, 0.0
+        return flat(R.CAR_TAX_TRUCK_DEFAULT[use])
     if fuel in ("전기", "수소") or cc == 0:
-        base = R.CAR_TAX_FLAT_EV[use]
-        disc = 0.0
-    else:
-        rate = next(r for lim, r in R.CAR_TAX_CC[use] if cc <= lim)
-        base = cc * rate
-        disc = 0.0
-        if not commercial:
-            for y in sorted(R.AGE_DISCOUNT, reverse=True):
-                if age >= y:
-                    disc = R.AGE_DISCOUNT[y]
-                    break
-        base = int(base * (1 - disc))
-    edu = int(base * R.EDU_TAX_RATE) if not commercial else 0
-    return base, edu, base + edu, disc
+        b = R.CAR_TAX_FLAT_EV[use]
+        h = b // 2
+        halves = [(h, int(h * R.EDU_TAX_RATE) if not commercial else 0),
+                  (b - h, int((b - h) * R.EDU_TAX_RATE) if not commercial else 0)]
+        edu = sum(e for _, e in halves)
+        return b, edu, b + edu, 0.0, halves
+
+    rate = next(r for lim, r in R.CAR_TAX_CC[use] if cc <= lim)
+    A = cc * rate                      # 연세액 (경감 전)
+    halves, disc = [], 0.0
+    for n in ages:
+        d = R.age_discount(n) if not commercial else 0.0
+        disc = max(disc, d)
+        h = int(A / 2 * (1 - d) / 10) * 10          # 10원 미만 절사
+        e = int(h * R.EDU_TAX_RATE / 10) * 10 if not commercial else 0
+        halves.append((h, e))
+    base = sum(h for h, _ in halves)
+    edu = sum(e for _, e in halves)
+    return base, edu, base + edu, disc, halves
 
 
 def acq_tax(price_won, kind, fuel, commercial=False):
@@ -264,7 +287,9 @@ def build_data_json():
         "busFlat": R.CAR_TAX_BUS_DEFAULT,
         "truckFlat": R.CAR_TAX_TRUCK_DEFAULT,
         "edu": R.EDU_TAX_RATE,
-        "ageDisc": {str(k): v for k, v in R.AGE_DISCOUNT.items()},
+        "ageStep": R.AGE_STEP,
+        "ageBase": R.AGE_BASE,
+        "ageMax": R.AGE_MAX,
         "acq": {k: v for k, v in R.ACQ_RATES.items()},
         "exempt": {k: v["limit"] for k, v in R.EXEMPTIONS.items()},
         "bond": R.BOND_RATES,
@@ -273,7 +298,9 @@ def build_data_json():
         "bondEvLimit": R.BOND_EV_LIMIT,
         "bondHevLimit": R.BOND_HEV_LIMIT,
         "prepay": R.PREPAY_RATE,
-        "prepayWindows": [[w[0], w[1], w[2], w[3], w[4]] for w in R.PREPAY_WINDOWS],
+        "prepayWindows": [[w[0], w[1], R.prepay_days(w[2], date.today().year), w[3]]
+                          for w in R.PREPAY_WINDOWS],
+        "yearDays": R.days_in_year(date.today().year),
         "residual": R.RESIDUAL_PUBLISHED,
         "decay": R.RESIDUAL_DECAY,
         "fees": R.REG_FEES,
@@ -310,22 +337,42 @@ function residual(age, origin){
   const r = t[last] * Math.pow(D.decay[origin]||0.8475, Math.min(age,20)-last);
   return Math.max(Math.round(r*10000)/10000, 0.05);
 }
-function carTax(cc, fuel, age, commercial, kind){
+/* 차령 n : 최초등록일 기준. 1~6월 등록은 (과세연도-등록연도)+1, 7~12월은 1기분만 -1 */
+function carAges(regYear, regMonth, taxYear){
+  const d = taxYear - regYear;
+  return regMonth <= 6 ? [d+1, d+1] : [d, d+1];
+}
+function ageDiscount(n){
+  const steps = Math.min(Math.max(n - D.ageBase, 0), D.ageMax - D.ageBase);
+  return Math.round(steps * D.ageStep * 100) / 100;
+}
+/* 각 기분세액 = A/2 − (A/2 × 5/100)(n−2), 기분마다 10원 미만 절사 */
+function carTax(cc, fuel, ages, commercial, kind){
   const use = commercial ? "영업용" : "비영업용";
-  let base, disc=0;
-  if(kind==="승합"){ const b=D.busFlat[use]; return {base:b, edu:0, total:b, disc:0, flat:"승합"}; }
-  if(kind==="화물"){ const b=D.truckFlat[use]; return {base:b, edu:0, total:b, disc:0, flat:"화물"}; }
-  if(fuel==="전기"||fuel==="수소"||!cc){ base = D.evFlat[use]; }
-  else{
-    const row = D.ccRate[use].find(r=>cc<=r[0]);
-    base = cc*row[1];
-    if(!commercial){
-      for(let y=12;y>=3;y--){ if(age>=y){ disc = D.ageDisc[String(Math.min(y,12))]; break; } }
-    }
-    base = Math.floor(base*(1-disc));
+  const flat = b => {
+    const h = Math.floor(b/2);
+    return {base:b, edu:0, total:b, disc:0, halves:[[h,0],[b-h,0]]};
+  };
+  if(kind==="승합") return Object.assign(flat(D.busFlat[use]), {flatKind:"승합"});
+  if(kind==="화물") return Object.assign(flat(D.truckFlat[use]), {flatKind:"화물"});
+  if(fuel==="전기"||fuel==="수소"||!cc){
+    const b = D.evFlat[use], h = Math.floor(b/2);
+    const hv = [[h, commercial?0:Math.floor(h*D.edu)], [b-h, commercial?0:Math.floor((b-h)*D.edu)]];
+    const edu = hv[0][1]+hv[1][1];
+    return {base:b, edu, total:b+edu, disc:0, halves:hv, flatKind:"전기"};
   }
-  const edu = commercial ? 0 : Math.floor(base*D.edu);
-  return {base, edu, total:base+edu, disc};
+  const row = D.ccRate[use].find(r=>cc<=r[0]);
+  const A = cc*row[1];
+  let halves=[], disc=0;
+  for(const n of ages){
+    const d = commercial ? 0 : ageDiscount(n);
+    if(d>disc) disc = d;
+    const h = Math.floor(A/2*(1-d)/10)*10;
+    const e = commercial ? 0 : Math.floor(h*D.edu/10)*10;
+    halves.push([h,e]);
+  }
+  const base = halves[0][0]+halves[1][0], edu = halves[0][1]+halves[1][1];
+  return {base, edu, total:base+edu, disc, halves};
 }
 function acqTax(price, kind, fuel, commercial, extra){
   const basis = Math.floor(price/1.1);
@@ -370,8 +417,8 @@ function bondCost(basis, cc, fuel, region, commercial, kind){
 
 /* ── 상태 ── */
 const S = {mode:"new", model:null, trim:null, cc:1598, price:20000000,
-  fuel:"가솔린", kind:"승용", origin:"국산", year:D.year, region:"서울",
-  commercial:false, extra:""};
+  fuel:"가솔린", kind:"승용", origin:"국산", regYear:D.year, regMonth:1,
+  region:"서울", commercial:false, extra:""};
 
 /* ── UI ── */
 const $ = s=>document.querySelector(s);
@@ -406,10 +453,12 @@ function calc(){
   S.cc = +el("cc").value||0;
   S.price = (+el("price").value||0)*10000;
   S.fuel = el("fuel").value;
-  S.year = +el("year").value||D.year;
+  S.regYear = +el("regYear").value||D.year;
+  S.regMonth = +el("regMonth").value||1;
   S.region = el("region").value;
   S.commercial = el("use").value==="영업용";
-  const age = Math.max(0, D.year - S.year);
+  const ages = carAges(S.regYear, S.regMonth, D.year);
+  const age = Math.max(0, D.year - S.regYear);
 
   // 중고차: 시가표준액 추정
   let taxPrice = S.price, basisNote="";
@@ -425,12 +474,12 @@ function calc(){
   const a = acqTax(taxPrice, S.kind, S.fuel, S.commercial, S.extra);
   const b = bondCost(a.basis, S.cc, S.fuel, S.region, S.commercial, S.kind);
   const fees = Object.values(D.fees).reduce((x,y)=>x+y,0);
-  const c = carTax(S.cc, S.fuel, age, S.commercial, S.kind);
+  const c = carTax(S.cc, S.fuel, ages, S.commercial, S.kind);
 
   // 연납
   const pre = D.prepayWindows.map(w=>{
-    const cut = Math.round(c.total * w[2]/12 * D.prepay);
-    return {label:w[0], months:w[2], period:w[3], pay:c.total-cut, cut};
+    const cut = Math.floor(c.total * w[2]/D.yearDays * D.prepay / 10)*10;
+    return {label:w[0], days:w[2], period:w[3], pay:c.total-cut, cut};
   });
 
   let html = `<div class="out">
@@ -456,23 +505,31 @@ function calc(){
   if(a.cut>0) html += `<div class="mini">감면은 중복 적용되지 않고 가장 유리한 하나만 적용됩니다 (지방세특례제한법 제180조).</div>`;
   html += `</div>`;
 
+  const h1 = c.halves[0][0]+c.halves[0][1], h2 = c.halves[1][0]+c.halves[1][1];
+  const ageTxt = c.flatKind ? "" :
+    (ages[0]===ages[1] ? ` (차령 ${ages[0]}년${c.disc?`, ${(c.disc*100).toFixed(0)}% 경감`:""})`
+                       : ` (차령 1기분 ${ages[0]}년 · 2기분 ${ages[1]}년)`);
   html += `<div class="out" style="margin-top:14px">
     <h3>보유 단계 — 연간 자동차세</h3>
-    <div class="row"><span>자동차세${c.disc?` (차령 ${age}년, ${(c.disc*100).toFixed(0)}% 경감)`:""}</span><b>${won(c.base)}</b></div>`;
-  if(!S.commercial && !c.flat) html += `<div class="row"><span>지방교육세 30%</span><b>${won(c.edu)}</b></div>`;
+    <div class="row"><span>자동차세${ageTxt}</span><b>${won(c.base)}</b></div>`;
+  if(!S.commercial && !c.flatKind) html += `<div class="row"><span>지방교육세 30%</span><b>${won(c.edu)}</b></div>`;
   html += `<div class="row total"><span>연간 납부액</span><span>${won(c.total)}</span></div>
-    <div class="mini">6월(1기분) ${won(Math.round(c.total/2))} + 12월(2기분) ${won(c.total-Math.round(c.total/2))}</div>`;
-  if(c.flat==="승합") html += `<div class="mini">승합자동차(11~15인승)는 배기량과 무관하게 정액으로 과세하고 지방교육세가 붙지 않습니다. 차령 경감도 없습니다.</div>`;
-  if(c.flat==="화물") html += `<div class="mini">화물자동차는 적재량 기준 정액입니다. 위 금액은 1,000kg 이하 기준이며 지방교육세가 붙지 않습니다.</div>`;
+    <div class="mini">6월(1기분) ${won(h1)} + 12월(2기분) ${won(h2)}</div>`;
+  if(!c.flatKind) html += `<div class="mini">기분마다 <b>A/2 − (A/2 × 5/100)(n−2)</b> 로 계산하고 각각 10원 미만을 절사합니다 (지방세법 제127조 제3항).</div>`;
+  if(c.flatKind==="승합") html += `<div class="mini">승합자동차(11~15인승)는 배기량과 무관하게 정액으로 과세하고 지방교육세가 붙지 않습니다. 차령 경감도 없습니다.</div>`;
+  if(c.flatKind==="화물") html += `<div class="mini">화물자동차는 적재량 기준 정액입니다. 위 금액은 1,000kg 이하 기준이며 지방교육세가 붙지 않습니다.</div>`;
+  if(c.flatKind==="전기") html += `<div class="mini">전기·수소차는 정액 과세라 차령이 지나도 줄어들지 않습니다.</div>`;
   html += `</div>`;
 
   html += `<div class="out" style="margin-top:14px">
     <h3>연납 할인 (공제율 ${(D.prepay*100).toFixed(0)}%)</h3>`;
   pre.forEach(p=>{
-    html += `<div class="row"><span>${p.label} 연납 <small style="color:var(--muted)">${p.period}</small></span>
+    html += `<div class="row"><span>${p.label} 연납 <small style="color:var(--muted)">${p.period} · ${p.days}일분</small></span>
       <b>${won(p.pay)} <span class="neg">(−${won(p.cut)})</span></b></div>`;
   });
-  html += `<div class="mini">공제는 남은 개월수에만 적용됩니다. 1월 연납도 11개월분이라 실질 할인은 약 2.75%입니다.</div></div>`;
+  html += `<div class="mini">공제액 = 연세액 × (납부기한 다음날부터 12/31까지 일수 ÷ ${D.yearDays}) × ${(D.prepay*100).toFixed(0)}%.
+    1월 연납도 334일분이라 실질 할인은 약 2.74%입니다.</div>
+    <div class="mini">3·6·9월 연납액은 이미 도래한 기분의 납부 여부에 따라 지자체 산출과 다를 수 있습니다.</div></div>`;
 
   el("result").innerHTML = html;
 }
@@ -483,7 +540,7 @@ function boot(){
   el("q").addEventListener("focus", e=>{ if(e.target.value) renderAC(search(e.target.value)); });
   document.addEventListener("click", e=>{ if(!e.target.closest(".results")) el("ac").style.display="none"; });
   el("trim").addEventListener("change", e=>pickTrim(+e.target.value));
-  ["cc","price","fuel","year","region","use","deal"].forEach(id=>{
+  ["cc","price","fuel","regYear","regMonth","region","use","deal"].forEach(id=>{
     const n = el(id); if(n) n.addEventListener("input", calc), n.addEventListener("change", calc);
   });
   document.querySelectorAll(".tabs button").forEach(b=>{
@@ -550,7 +607,7 @@ def build_index():
   </div>
   <div class="card">
     <span class="badge">연납</span>
-    <p style="margin:8px 0 0">2026년 공제율은 3%이고, 남은 개월수에만 적용돼 실질 할인은 <strong>약 2.75%</strong>입니다.
+    <p style="margin:8px 0 0">2026년 공제율은 3%이고, 남은 일수에만 적용돼 실질 할인은 <strong>약 2.74%</strong>입니다.
     1·3·6·9월 신청분을 모두 보여 줍니다.</p>
   </div>
 </div>
@@ -578,8 +635,9 @@ def build_index():
 def calc_form(embed=False):
     """계산기 입력 폼 HTML — tool.html 과 embed.html 이 공유합니다."""
     regions = "".join(f'<option value="{r}">{r}</option>' for r in R.BOND_RATES)
-    years = "".join(f'<option value="{y}">{y}년식</option>'
+    years = "".join(f'<option value="{y}">{y}년</option>'
                     for y in range(date.today().year, date.today().year - 25, -1))
+    months = "".join(f'<option value="{m}">{m}월</option>' for m in range(1, 13))
     return f"""
 <div class="card">
   <div class="tabs">
@@ -608,8 +666,10 @@ def calc_form(embed=False):
         <option>가솔린</option><option>디젤</option><option>LPG</option>
         <option>하이브리드</option><option>전기</option><option>수소</option>
       </select></div>
-    <div class="field"><label for="year">연식</label>
-      <select id="year">{years}</select></div>
+    <div class="field"><label for="regYear">최초등록 연도</label>
+      <select id="regYear">{years}</select></div>
+    <div class="field"><label for="regMonth">최초등록 월</label>
+      <select id="regMonth">{months}</select></div>
     <div class="field"><label for="region">등록 지역 (공채)</label>
       <select id="region">{regions}</select></div>
     <div class="field"><label for="use">용도</label>
@@ -622,6 +682,10 @@ def calc_form(embed=False):
         placeholder="0을 넣으면 시가표준액으로 계산합니다">
       <div class="mini">중고차는 실거래가와 시가표준액 중 <strong>높은 쪽</strong>이 과세표준입니다.</div>
     </div>
+  </div>
+
+  <div class="mini" style="margin:-4px 0 14px">
+    차령은 자동차등록증의 <b>최초등록일</b> 기준입니다. 제작연도(연식)와 다를 수 있습니다.
   </div>
 
   <div class="field" style="margin-bottom:6px">
@@ -686,7 +750,7 @@ def build_tool():
         sl = CARS.slug(maker, name)
         for t in trims:
             tname, cc, price, fuel = t
-            _, _, total, _ = car_tax(cc, fuel, 0, False, kind)
+            _, _, total, _, _ = car_tax(cc, fuel, (2, 2), False, kind)
             basis, tax, cut, cutname = acq_tax(price * 10000, kind, fuel, False)
             rows.append(
                 f'<tr><td><a href="{ROOT}/car/{sl}.html">{maker} {name}</a></td>'
@@ -708,11 +772,13 @@ def build_tool():
   <ul style="font-size:14px;color:var(--muted);margin:0">
     <li>취득세 과세표준 = 차량가격 ÷ 1.1 (부가가치세 제외 공급가액)</li>
     <li>승용 7% / 경차 4% / 승합·화물 5% / 영업용 4% — 자동차 취득세에는 지방교육세가 붙지 않습니다</li>
-    <li>자동차세 = 배기량 × cc당 세액 × (1 − 차령경감률), 여기에 지방교육세 30%</li>
+    <li>자동차세는 기분(반기)마다 <b>A/2 − (A/2 × 5/100)(n−2)</b> 로 계산하고 각각 10원 미만 절사 — A는 연세액, n은 차령</li>
+    <li>차령 n 은 <b>최초등록일</b> 기준: 1~6월 등록은 (과세연도−등록연도)+1, 7~12월 등록은 1기분만 1년 적게</li>
+    <li>지방교육세는 기분별 자동차세의 30% (비영업용 승용차만)</li>
     <li>전기·수소차는 정액 10만원 + 교육세 = 연 13만원, 차령 경감 없음</li>
     <li>감면은 중복 적용되지 않고 가장 유리한 하나만 적용됩니다 (지방세특례제한법 제180조)</li>
     <li>공채는 1,600cc 미만 전국 면제, 즉시매도 손실률 {int(R.BOND_DISCOUNT*100)}% 기준</li>
-    <li>연납 공제율 {int(R.PREPAY_RATE*100)}%, 남은 개월수 비례 적용</li>
+    <li>연납 공제액 = 연세액 × (납부기한 다음날~12/31 일수 ÷ 365) × {int(R.PREPAY_RATE*100)}%</li>
   </ul>
 </div>
 
@@ -743,7 +809,7 @@ def build_car_pages():
         rows, rows_age = [], []
         for tname, cc, price, fuel in trims:
             basis, tax, cut, cutname = acq_tax(price * 10000, kind, fuel, False)
-            base, edu, total, _ = car_tax(cc, fuel, 0, False, kind)
+            base, edu, total, _, _ = car_tax(cc, fuel, (2, 2), False, kind)
             ccs = f"{cc:,}cc" if cc else "전기"
             rows.append(f"<tr><td>{tname}</td><td>{ccs}</td><td>{price:,}만원</td>"
                         f"<td>{won(tax)}</td><td>{'−'+won(cut) if cut else '-'}</td>"
@@ -753,8 +819,8 @@ def build_car_pages():
         age_rows = []
         for tname, cc, fuel, _ in rows_age:
             cells = []
-            for a in (0, 3, 5, 8, 12):
-                _, _, t, _ = car_tax(cc, fuel, a, False, kind)
+            for a in (2, 3, 5, 8, 12):
+                _, _, t, _, _ = car_tax(cc, fuel, (a, a), False, kind)
                 cells.append(f"<td>{won(t)}</td>")
             age_rows.append(f"<tr><td>{tname}</td>{''.join(cells)}</tr>")
 
@@ -784,17 +850,18 @@ def build_car_pages():
 """
         else:
             age_section = f"""
-<h2>연식별 자동차세</h2>
-<p>차령 3년째부터 매년 5%포인트씩, 12년 이상이면 50%까지 줄어듭니다.</p>
+<h2>차령별 자동차세</h2>
+<p>차령 3년째부터 매년 5%포인트씩, 12년 이상이면 50%까지 줄어듭니다.
+차령은 <strong>최초등록일</strong> 기준이라 연식과 1년 차이가 날 수 있습니다.</p>
 <table>
-<thead><tr><th>트림</th><th>신차</th><th>3년</th><th>5년</th><th>8년</th><th>12년↑</th></tr></thead>
+<thead><tr><th>트림</th><th>차령 2년↓</th><th>3년</th><th>5년</th><th>8년</th><th>12년↑</th></tr></thead>
 <tbody>{''.join(age_rows)}</tbody>
 </table>"""
 
         cc_main = trims[0][1]
         fuel_main = trims[0][3]
         price_main = trims[0][2]
-        _, _, total_main, _ = car_tax(cc_main, fuel_main, 0, False, kind)
+        _, _, total_main, _, _ = car_tax(cc_main, fuel_main, (2, 2), False, kind)
         _, tax_main, cut_main, _ = acq_tax(price_main * 10000, kind, fuel_main, False)
 
         note = ""
@@ -841,7 +908,7 @@ def build_car_pages():
 <h2>세금을 줄이는 방법</h2>
 <ul>
 <li>18세 미만 자녀가 3명 이상이면 <a href="{ROOT}/guide/multi-child-disabled.html">다자녀 감면</a>을 받을 수 있습니다. 7인승 이상이면 한도 없이 전액 면제입니다.</li>
-<li>1월에 <a href="{ROOT}/guide/prepayment-discount.html">자동차세를 연납</a>하면 약 2.75% 할인됩니다.</li>
+<li>1월에 <a href="{ROOT}/guide/prepayment-discount.html">자동차세를 연납</a>하면 약 2.74% 할인됩니다.</li>
 <li>중고로 살 때는 <a href="{ROOT}/guide/used-car-tax-base.html">시가표준액</a>과 실거래가 중 높은 쪽이 기준이 됩니다.</li>
 </ul>
 
